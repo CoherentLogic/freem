@@ -1,0 +1,31 @@
+Version Numbering Scheme Q&A
+
+QUESTION:
+ Why are the releases being numbered like "0.n.0" (e.g., 0.5.0)???
+ Sure, it hasn't been "released" yet (far from it, granted), but will the
+ number be set to 1.0.0 when the first "release" goes out?  This doesn't
+ make sense to me.
+
+ANSWER:
+Our numbering scheme is based on the fact that until we fulfill 
+Shalom's requirements, we can't state that we have our first 
+public version of FreeM. 
+So we can't call it version number 1.0.0 until we do.
+The third number m.n.p (ie: p) is intended to allow the private
+development of versions that are not released on the coordinated
+web page.
+
+QUESTION:
+If you are *working* on release "1.0", then the work-in-progress numbers
+should be "1.0.nnn", where nnn=001, 002, ... until you get to an alpha
+version, say, numbered 1.0.135, and a beta numbered, say, 1.0.278, and
+various release candidates numbered 1.0.324, 1.0.325, 1.0.326, etc., and a
+final "1.0" release numbered, say, 1.0.354.
+
+ANSWER:
+A very good synopsis of the approach taken by some. Using that analogy,
+we work with the  pattern "m.nnn.0" for our work-in-progress numbers.
+In the pattern, the "m" is the major version number,
+and "nnn" as you state above is the work-in-progress number. 
+The third digit, as I state above is for private developers' use.
+ 

@@ -1,0 +1,100 @@
+C2M is designed to isolate global handlers from clients so that they
+can be paired together in arbitrary ways. Any client (MUMPS
+interpreter etc) can use any global handler. The global manager is a
+one to many interface, i.e. one interpreter can use more than one
+global handler. Once the interface is in place people write handlers
+for existing databases via vendor specific interfaces.
+
+There are two primary benefits.
+
+1) The interpreter can be expanded to use new global handlers without
+changing interpreter code.
+
+2) Interfaces can be written for arbitrary languages to access the
+global data.
+
+The C2M interface is based heavily on the OMI standard, presuming that
+those guys (the OMI committee) know a lot more than I do about what
+services a global handler should provide.
+
+The API's for C2M are all defined in C. This language was chosen as a
+universal implementation language. This makes C2M available to
+Python. Perl, Tcl, C, C++ and any other language you can imagine.
+
+NOTE: An incomplete specification of C2M can be found on the 
+www.rosecroft.net site.
+
+A project plan for the FreeM C2M interface.
+
+1) Isolate the global handler in FreeM. Currently it closely
+intertwined with the rest of the product. There are many global
+variables. At the end of this stage the functionality will be
+identical but there will be a simpler interface between globals and
+the interpreter. The wrapper interface basibally uses the current
+FreeM global interface and translates to an identical one that does
+not use FreeM global values and functions. It will look silly but will
+completely insulate the globals from everything else. The goal at this
+point is to allow C2M development without impacting the rest of the
+developers.
+
++-------+   +----------+  +---------+
+|       |   |          |  |         |
+| FreeM +---+ wrapper  +--+ FreeM   |
+|       |   |          |  | globals |
++-------+   +----------+  +---------+
+
+2) Add C2M between the wrapper and a modified version of FreeM global
+code. This step finally incorporates my C2M manager code into FreeM.
+
++-------+   +------------------+   +---------+   +-----------------+
+|       |   | wrapper modified |   |         |   | FreeM globals   |
+| FreeM +---+ to use C2M       +---+ C2M     +---| modified to use |
+|       |   | Manager API      |   | Manager |   | C2M handler API |
++-------+   +------------------+   +---------+   +-----------------+
+
+3) Final cleanup to FreeM. Get rid of the wrapper. Change FreeM to use
+the C2M manager interface directly. This finishes the FreeM part of
+the development. Since my primary interest is in C2M and global
+handlers I may leave this step for someone else.
+
++----------------+   +---------+   +-----------------+
+| FreeM modified |   |         |   | FreeM globals   |
+| to use C2M     +---+ C2M     +---| modified to use |
+| Manager API    |   | Manager |   | C2M handler API |
++----------------+   +---------+   +-----------------+
+
+4) The future.
+
+Now global handler development can be done in parallel. Since the
+C2M manager is designed to handle multiple global handlers at the same
+time we can talk about having the current handler (with FreeM derived
+code) for same machine data and an OMI handler for other
+machines. Since C2M version two is a direct one to one mapping on OMI
+this should be simple. Or any of the other things we discussed years
+ago. I have my own global manager I would like to try. This scheme
+allows direct comparisons.
+
+The OMI scheme would come in two parts, client and server, and would
+look like the following:
+
+Client side:
+
++-------+   +---------+   +------------------+
+|       |   |         |   | OMI client using |
+| FreeM +---+ C2M     +---| C2M handler API  |-- >> TCP/IP
+|       |   | Manager |   |                  |
++-------+   +---------+   +------------------+
+
+Server side:
+             +-----------+   +---------+   +-----------------+
+             |           |   |         |   | FreeM globals   |
+TCP/IP >> -- |OMI server +---+ C2M     +---| modified to use |
+             |           |   | Manager |   | C2M handler API |
+             +-----------+   +---------+   +-----------------+
+
+Notice that OMI just reuses existing code and interfaces for
+everything not directly related to the OMI client/server code. FreeM
+and the global handlers require no change to add OMI. These pieces can
+be assembled by users in arbitrarily complex topologies. Each OMI
+server can use a combination of global handlers includine another OMI
+client interfacing to an even more remote server.

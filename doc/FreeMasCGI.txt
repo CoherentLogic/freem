@@ -1,0 +1,48 @@
+Discussion about FreeM and CGI.
+I think there are three solutions to use FreeM as an HTML-frontend-database:
+
+1) Native CGI
+advantage is very flexible, runs with all HTTP-Servers. But its slow.
+
+2) Write a HTTP-server in M
+Some Years ago i've written an HTTP-Server in MSM. It was a very very fast
+solution but FreeM doesn't support TCP/IP yet.
+
+3) Compile FreeM as an Apache-Module
+Perhaps the best solution. I have some experiences in PHP (www.php.net)
+which is a programming-language embedded in HTML. 
+It's very fast and static stuff like images will be deliverd by apache.
+Is somebody here with experiences in writing Apache-Modules?
+
+Note that CGI's are expected to get access to certain environment
+variables (which have the header and other information from the shell)
+If FreeM is invoked with the -e command line option, all environment
+variables are copied into subscripts of the variable named %.
+It refuses to read any environment variable which has a string 
+length longer than 255 characters.
+In UNIX environment variables live in the memory space of the running task. 
+They get copied when a new task is launched. 
+Thus each task inherits the environment space of its parent. 
+If you use the shell escape you only set the variables in
+the shell's memory space which goes away when it quits. (NOTE: This
+discussion does not apply to the the Microsoft world which has its own
+behavior.)
+
+One possibility is Using a routine %MCGI
+
+%MCGI    ;;
+    w "CONTENT-TYPE: TEXT/HTML",!!
+    w "<HTML><HEAD></HEAD><BODY>FREEM!!!</BODY></HTML>",$C(10)
+    h
+
+and invoking M with following script in cgi-bin
+
+cd /usr/local/FreeM/FreeM-0.x.0/src/
+../mumps ^%MCGI -f
+
+i always get an internal Server-Error. Calling directly i get the output
+
+CONTENT-TYPE: TEXT/HTML
+
+<HTML><HEAD></HEAD><BODY>FREEM!!!</BODY></HTML>
+

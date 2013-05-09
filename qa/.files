@@ -1,0 +1,6 @@
+.dirs
+.files
+Makefile
+encode
+exec_qa
+mk_namespace

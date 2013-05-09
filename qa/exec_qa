@@ -1,0 +1,51 @@
+#!/bin/sh
+# $Source: /cvsroot-fuse/gump/FreeM/qa/exec_qa,v $
+# $Revision: 1.4 $ $Date: 2000/02/28 18:02:23 $
+#
+if [ $# != 3 ] ; then
+	echo "usage: $0 <m-inplementation> <implementation-version> <testid>"
+	exit 1
+fi
+
+FREEM_LIB=../../mlib
+export FREEM_LIB
+
+M_IMPLEMENTATION=$1
+if [ "${M_IMPLEMENTATION}" = "" ] ; then
+	M_IMPLEMENTATION=FreeM
+fi
+
+IMPL_VERSION=$2
+if [ "${IMPL_VERSION}" = "" ] ; then
+	IMPL_VERSION=0.`echo "\$Revision: 1.4 $" | tr -d 'Revision: \$'`
+	echo IMPL_VERSION=${IMPL_VERSION}
+fi
+
+TESTID=$3
+cd ../${TESTID}.qa
+
+PGM=
+if [ -f QASTU.m ] ; then
+	PGM="^QASTU"
+	echo "NOTE: using alternate program ${PGM}"
+fi
+
+cat want.in | ../../bin/mumps ${PGM} -e  2> test.err >test.out
+echo "" >>test.out
+diff test.out want.out > diff.out
+diff test.err want.err > diff.err
+ls -s diff.*
+
+if [ -s diff.out ] ; then
+  echo error in standard output
+  exit 27
+fi
+
+if [ -s diff.err ] ; then
+  echo error in error output
+  exit 28
+fi
+
+echo =====================================================
+
+# End of $Source: /cvsroot-fuse/gump/FreeM/qa/exec_qa,v $

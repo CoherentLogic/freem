@@ -1,0 +1,21 @@
+when I use emacs to edit a file with extension ".m" in my standard
+GNU Linux environment the editor assumes that I am going to work on a
+"ObjC"-file and starts the appropiate cc-mode which (according to what I
+experienced) by default is configured to not accecpt the "tab".
+
+workaround:
+
+"text-mode" is much more useful - this mode by default accepts the "tab".
+To start "text-mode" automatically instead of "cc-mode" when invoking a
+".m" file the follwing helped:
+
+create a file ".emacs" in the home directory
+
+with a line
+
+(setq auto-mode-alist (cons '("\\.m\\'" . text-mode) auto-mode-alist))
+
+
+Emacs is not that uncommon within the linux scene and ".m" seems to have a
+certain meaning there. So we have to face that changing the file extention
+from ".mps" to ".m" has a side effect.

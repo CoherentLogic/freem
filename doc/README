@@ -1,0 +1,235 @@
+                              *
+                             * *
+                            *   *
+                       ***************
+                        * *       * *
+                         *  MUMPS  *
+                        * *       * *
+                       ***************
+                            *   *
+                             * *
+                              *
+
+Shalom ha-Ashkenaz, 1998/06/18 CE
+
+RE: FreeMUMPS and its source code files
+
+Shalom!
+
+Someone set out to purchase all MUMPS vendors. What is good for Terry
+may not be good for the traditional MUMPS community.
+
+MUMPS is fun. MUMPS is OPEN. MUMPS puts YOU in control of affairs.
+
+Somebody is monopolising MUMPS, is cache-ing MUMPS.
+
+So we need a FreeMUMPS, i.e. something even Terry-Bill cannot buy!
+
+Here are files of a preliminary version of FreeMUMPS.
+
+I put them in the hands of MUG with the following guidelines:
+
+1) The aim of the project is to make available FreeMUMPS to
+   everybody (even private use for Terry shall be granted :-).
+
+2) As long as there is no manual (preferably in the English language)
+   available to the public and as long as there is an unresolved list
+   of known problems, FreeMUMPS is ***NOT*** to be made available to
+   the general public. Let lousy products be the privilege of MS-Bill.
+
+3) MUG may forward FreeMUMPS at this stage to individuals
+   or to non-profit organizations who volunteer to contribute to the
+   project. When there is a manual (TeX or LaTeX recommended!, HTML is
+   not bad either) and when a MUG task force declares
+   FreeMUMPS free of known problems then FreeMUMPS is to be made
+   available to the general public.
+   
+4) FreeMUMPS is not to be placed under the GNU General Public Licence.
+   Anybody who wants to produce a proprietary product with parts of
+   FreeMUMPS is free to do so: Either with FreeMUMPS as part of
+   application programs or with FreeMUMPS as the basis of a new
+   commercial MUMPS implementation. However, who passes FreeMUMPS
+   or products based on it, must inform the recipient of the
+   FreeMUMPS Copyright, and he has to provide the FreeMUMPS
+   source codes without additional charges.
+
+5) Everybody passing FreeMUMPS or products based on it should encourage
+   the recipient to join in a MUMPS Users Group of her choice.
+
+6) Current FreeMUMPS runs under LINUX and under SCO-UNIX. Minor modifications
+   may be needed to make it compile & run under other Unixes. A Windows-98 or
+   Windows-NT Version is desirable. char is "signed char".
+   under SCO-UNIX you call it with "mumps.sco"
+   under LINUX    you call it with "mumps.linux"
+   use mcc and mutil to compile FreeMUMPS and associated untilities.
+
+Unresolved List of Known Problems in FreeMUMPS:
+
+- no manual
+  main features in a nutshell:
+  ,,standard'' MUMPS
+  255 char max string length
+  no controls in global subscripts
+  $C(129) is EOL = EndOfLine character, cannot be used
+  $C(130) is subscript delimiter, cannot be used
+  $V(17) non standard intrinsic commands
+    za zb zd zg zh zi zj zl zn zp zq zr zs zt zw
+    zallocate zbreak zdeallocate zgo zhalt zinsert zjob
+    zload znew zprint zquit zremove zsave ztrap zwrite
+  with VIEW 17 you can remove items from this list
+  use of a non standard command that is not in this list
+  is processed as a user defined command. "ZFOO argument"
+  is processed as
+  XECUTE "NEW % SET %=argument DO ^%zfoo"
+
+  $V(18) non standard intrinsic functions
+    zb zc zd ze zh zht zk zl zm zn zo zr zs zt
+    zboolean zcall zcr zcrc zdata zdate zedit zhorolog
+    zkey zlength zlsd zname znext zorder zpiece
+    zprevious zreplace zsyntax zsort ztime
+  with VIEW 18 you can remove items from this list
+  use of a non standard function that is not in this list
+  is processed as a user defined function. "$ZFOO(argument)"
+  is processed as "$$^%Zfoo(argument)"
+
+  $V(19) non standard intrinsic special variables
+    za zb zc zd ze zf zh zi zj zl zn zo zp zr zs zt zv
+    zcontrolc zdate zerror zname zhorolog zinrpt zjob
+    zlocal zorder zprecision zsystem ztime ztr ztrap
+    zreference zversion
+  with VIEW 19 you can remove items from this list
+ 
+  routines are stored as LINUX files with extension ".mps"
+  use $V(98) for inspection; VIEW 98 to change this
+
+  globals are stored as LINUX files with prefix "^" and
+  with no extension
+  use $V(96),$V(97) for inspection; VIEW 96,97 to change this
+
+  use SET $H (with root permissions!) to set the system date/time
+  use $V(99) and VIEW 99 to set an offset on $H for the current
+  job only. This is of tremendous value for date dependend tests (Y2K!).
+
+  %-Routines and %-Globals reside in /usr/lib/mumps. All other routines
+  reside in the current directory (There is no UCI).
+  change/inspect this with VIEW/$VIEW 3 through 8.
+
+  see views.c to see more features to customize FreeMUMPS.
+
+  there is no explicit limit on the size of routines, local symbol table,
+  globals (but it can be controlled via VIEW/$VIEW).
+
+  !  shell escape
+  !< shell escape with output to %-array
+  !> shell escape with input from % array
+  !! shell escape afer HALTing FreeMUMPS
+  ***manual should be produced with TeX or LaTeX***
+
+  on startup the routine login.mps is executed. Unless this HALTS,
+  programmer mode (directmode) is entered on termination of login.mps
+
+  ,,utilites'' are not needed, as there in a convenient way to call
+  LINUX utilies from with FreeMUMPS
+
+  Database errors can be diagnosed with fix/gvalidate. They can be
+  repaired with grestore.
+  
+- accuracy of power operator (**) with non-integer exponents needs
+  careful evaluation.
+
+- accuracy of division may be controlled with $ZPRECISION, but
+  is not clean.
+
+- local variable module handles arrays inefficiently.
+
+- call by reference has a problem: if the formal name and the
+  actual name differ, all action should be visible under both
+  names, with the exception of the NEW command. FreeMUMPS does
+  not honor this exception.
+
+- $QUERY with negative second argument returns wrong results.
+  $ORDER with arbitrary second argument (intexpr) is OK.
+
+- standard error handling not implemented. So far only traditional
+  non-standard error handling with SET $ZTRAP="entryref"
+
+- transaction processing not implemented. But probably it is not
+  possible to do so in an efficient manner.
+
+- MERGE, KVALUE, KDATA not implemented
+
+- ssvn not implemented, but hook in expr.c included.
+
+- &sql{} binding, OMI, MWAPI, GKS binding not implemented.
+
+- extentions for values (i.e. number+unit) so far only implemented
+  for CURRENCY with the official conversion rates for the currencies of
+  the euro club.
+  try IF 1DEM<1EUR WRITE 1DEM+.5EUR WRITE 10EUR#2ATS
+ 
+- there are restrictions in the use of characters. Printable ASCII
+  are OK. ASCII-Controls cannot be used in global subscripts.
+  Otherwise all 7-bit chars are O.K.
+  Strings in LINUX are delimited with $C(0). $C(0) is no problem. But
+  $C(129) -lowest possible value in signed chars- is used as EOL =
+  End_Of_Line symbol in FreeMUMPS strings. $C(130) is internally used
+  as a separator in subscripts of (local/global) arrays. All other
+  values may be used ( control this with VIEW/$VIEW 80)
+  it is desirable to change FreeMUMPS either to use unsigned chars
+  with $C(254) as DELIMiter in subscripts and $C(255) as EOL. Or
+  even better: Instead of defining a string as a sequence of characters
+  being terminated by a certain char, a better implentasion uses a counter
+  plus a number of arbitrary (UNICODE?) chars.
+
+- VIEW/$VIEW should be retired completely. All functionality currently
+  using VIEW should be changed to ssvn.
+
+- UNICODE should be adopted as the internal character set.
+
+- if COLOR is made undefined /* commented in mpsdef0 */ FreeMUMPS
+  works under SCO-UNIX, but it crashes immediately under LINUX.
+  Therefore let it compile with COLOR defined, even if LINUX does
+  not honor the color codes meant for scounix.
+
+Have much fun, get involved with FreeMUMPS, and do not forget
+to observe Sabbath Kaddish,
+
+Yours,
+
+Shalom ha-Ashkenaz
+
+Filenames under MS-DOS are uppercase only.
+For use under unix                        -> please rename
+
+COPYRIGH          1322 11.01.99   14:51   -> COPYRIGHT
+README            8198 11.01.99   16:26
+BENCH    MPS      1567 11.01.99   14:51   -> bench.mps
+COMPACT  C        9324 11.01.99   14:51   -> compact.c
+EXPR     C      109452 11.01.99   14:52   -> expr.c
+FIX               6024 11.01.99   14:52   -> fix
+FIX      C        6334 11.01.99   14:53   -> fix.c
+GCOMPACT         30400 11.01.99   14:53   -> gcompact
+GL                6700 11.01.99   14:53   -> gl
+GL       C        8335 11.01.99   14:53   -> gl.c
+GLOBAL   C       68467 11.01.99   14:54   -> global.c
+GRESTORE         30128 11.01.99   14:54   -> grestore
+GVALIDAT          7976 11.01.99   14:54   -> gvalidate
+LOCKS             4820 11.01.99   14:54   -> locks
+LOCKS    C        7562 11.01.99   14:54   -> locks.c
+LOGIN    MPS       135 11.01.99   14:54   -> login.mps
+MCC                554 11.01.99   14:54   -> mcc
+MPS      MAK      1186 11.01.99   14:59   -> mps.make
+MPSDEF           18076 11.01.99   14:59   -> mpsdef
+MPSDEF0           9908 11.01.99   14:59   -> mpsdef0
+MUMPS    C       45641 11.01.99   15:00   -> mumps.c
+MUMPS    LIN    215296 11.01.99   15:01   -> mumps.linux
+MUMPS    SCO    224480 11.01.99   15:02   -> mumps.scounix
+MUTIL              953 11.01.99   15:02   -> mutil
+OPERATOR C       45021 11.01.99   15:03   -> operator.c
+RESTORE  C        8674 11.01.99   15:03   -> restore.c
+SERVICE  C       97693 11.01.99   15:04   -> service.c
+STRINGS  C        2477 11.01.99   15:04   -> strings.c
+SYMTAB   C       39881 11.01.99   15:04   -> symtab.c
+VALIDATE C       13897 11.01.99   15:04   -> validate.c
+VIEWS    C       45765 11.01.99   15:05   -> views.c
+XECLINE  C       78992 11.01.99   15:06   -> xecline.c

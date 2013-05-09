@@ -1,0 +1,44 @@
+The following is our current strategy for Source Control and
+eventual migration to CVS.
+
+The following will be available on www.rosecroft.net
+
+  1. The current release (e.g. FreeM-0.x.0) for those just wanting the
+     current source code.
+  2. The RCS repository available (FreeM.tgz) which includes the 
+     scripts that I use to manage it (I use RCS, and the repository
+     starts with the original Shalom version as RCS 0.0... Ron Fox's
+     release is 0.1, and the first GUM Project release will be 1.0).
+
+  Brief discussion of the current approach on source code management for
+  FreeM: (this is also outlined in FreeM-Checkpoint.txt)
+
+  1. All files and directories of files that participate in a release
+     of the software are at the same revision within the repository.
+  2. A directory of all files currently participating in the package
+     are listed in a file named '.files'.
+  3. A directory of all 'directories' of files currently participating
+     in the package are listed in a file named '.dirs'.
+  4. A directory of all files that exist only as "binary" files (e.g.
+     any 'gif' or other image thingys) are encoded to a "mail safe"
+     format (e.g. base64, uuencode) and listed in a file named '.encode'.
+  5. Scripts are supplied to manage the collection (driven by .files and
+     .dirs) to check in/out, diff, make distributions (of participating
+     files only), etc...
+       ckRCSfiles    Walks the current directory ('.') looking for files
+                     and directories that are missing from the .files
+		     and .dirs control files.
+       doRCSprocess  Driven by .files and .dirs to do things like ci, co,
+                     rcsdiff, etc.
+       mkRCSdist     Driven by .files and .dirs to make a hierarchical
+                     copy of the currently active files.
+       mkRCSfiles    Walks the current directory ('.') and creates the
+                     .files and .dirs control files.
+  6. FreeM is currently Version 0.
+  7. All "releases" of FreeM are numbered with a monotonically increasing
+     by one RCS major revision number, minor revision 0, resulting in:
+     FreeM-0.<RCSmajor>.<RCSminor> where <RCSminor> is 0.
+  8. The <RCSminor> number is reserved to be used by the local installation
+     (e.g. you).
+  9. Submitted changes (context diffs) are relative to the <RCSmajor>.0
+     release.

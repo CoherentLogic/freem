@@ -1,0 +1,20 @@
+IF 1>3 WRITE 1
+ELSE  WRITE 2
+IF 3>2 WRITE 1
+E  WRITE 4
+I  WRITE 3
+e  WRITE 5
+i  WRITE 4 if 5 WRITE 6
+else  write 7
+IF 1<3,3<10 w 5
+Else  write 9
+iF 1,2,3 w 4
+eLse  write 10
+If 0,1,2,3,4,5,6,7 Write 7
+ELse  w 19
+I  writE 8
+elSe  w 20
+if 9<9 W 9 
+ElSe  I 9 w 30
+eLSe  w 93
+halt

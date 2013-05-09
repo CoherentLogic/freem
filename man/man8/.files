@@ -1,0 +1,16 @@
+%KILLJOB.8
+%LOGIN.8
+%N.8
+%SS.8
+%SYS.8
+%SYSGEN.8
+%SYSINFO.8
+%SYSNSP.8
+%SYSNSP0.8
+.files
+gcompact.8
+gfix.8
+glocks.8
+grestore.8
+gverify.8
+mumps.8

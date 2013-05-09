@@ -1,0 +1,37 @@
+Sam managed to compile FreeM-0.3.0 on Win NT using the LCC-WIN32 compiler. But
+Sam hacked it somewhat (#ifdef LCC_WIN32 and #endif and some small code changes 
+as well). 
+
+Sam encountered the following MAJOR problems in the port:
+
+1. The total lack of termios support on the Win32 platform.
+
+Sam simply made all of that conditional on LCC_WIN32. 
+It affects all terminal IO and such matters. 
+
+2. The poor support for signals (probably in the LCC compiler's library... 
+but could be intrinsic)
+
+Again, using the OLDUNIX support it worked. Sort of. 
+And Sam did change a lot of signal to the 'generic' SIGBRK.
+
+3. The lack of forking.
+
+Since the library on the Win32 lacks a fork() call it was simply disallowed.
+The other calls as well were changed to never fork, 
+or never expect signals from other jobs. Not nice.
+
+4. All direct calls to Unix / Linux routines had to be changed.
+
+
+And it compiled. And started. And all normal M code works! 
+BUT all escape sequences show up (as [ABC and what have you).
+
+SO, I propose some changes to the guidelines for the final version PROVIDED
+PORTABILITY is an issue:
+
+1. NO RELIANCE on any particalur terminal should be made (possible UNLESS
+explicitly called for in an OPEN statement). In other words, the system should
+NEVER on its own output escape sequences or try to use colours; all the fancy
+terminal handling in service.c should be deleted or moved to an OPEN statement
+or something.

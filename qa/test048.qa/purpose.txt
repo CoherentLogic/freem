@@ -1,0 +1,1 @@
+interactions with READ and WRITE with $DATA

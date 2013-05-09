@@ -1,0 +1,22 @@
+--blank-lines-after-commas
+--blank-lines-after-declarations
+--blank-lines-after-procedures
+--braces-on-if-line
+--comment-indentation		41
+--continuation-indentation	 8
+--continue-at-parentheses
+--cuddle-else
+--declaration-comment-column	41
+--declaration-indentation	 8
+--dont-format-first-column-comments
+--dont-star-comments
+--else-endif-column		 8
+--indent-level			 4
+--line-comments-indentation	41
+--line-length			73
+--parameter-indentation		 8
+--procnames-start-lines
+--space-after-cast
+--space-special-semicolon
+--start-left-side-of-comments
+--tab-size			 8

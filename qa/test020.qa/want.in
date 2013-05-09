@@ -1,0 +1,40 @@
+set A="",A1="",A2="",A3="",A4="",A5="",A6=""
+set A=$J("",0),A2=$J("",1)=" "
+w A,A1,A2,A3,A4,A5,A6
+S A3=$JUSTIFY(0,0)=0,A4=$justify(2,1),A5=$j(1,2,3)
+w A,A1,A2,A3,A4,A5,A6
+set A=$L(""),A1=$L(0),A2=$L(1)=1,A3=$LENGTH(1.2,0.2)=2
+w A,A1,A2,A3,A4,A5,A6
+s A4=$l(123,2),A5=$length(2,31)
+w A,A1,A2,A3,A4,A5,A6
+set A3=$n(A("8")),A4=$next(B(-1)),A5=$NEXT(C(1,2,3))
+w A,A1,A2,A3,A4,A5,A6
+set A4=$N(D(2,3)),A6=$N(@("A(2)"))
+w A,A1,A2,A3,A4,A5,A6
+set A1=$o(A("")),A2=$order(B(-1)),A3=$O(A(""))=""
+w A,A1,A2,A3,A4,A5,A6
+set A4=$ORDER(C("1",2,"3")),A5=$O(@("H(9)")
+w A,A1,A2,A3,A4,A5,A6
+set A2=$p("a","a"),A3=$piece("A","a",1),A4=$P(1,2,3,4),A5=$PIECE(32,2,3)
+w A,A1,A2,A3,A4,A5,A6
+set A1=$q(A(1)),A2=$query(A(1,2)),A3=$Q(B(3,2)),A4=$QUERY(C(3,2,1))
+w A,A1,A2,A3,A4,A5,A6
+set A=$r(1),A2=$R(10)<10,A3=$random(1.5),A4=$RANDOM(0+1)
+w A,A1,A2,A3,A4,A5,A6
+set A=$s(1:1),A1=$SELECT(1:1,0:1)
+w A,A1,A2,A3,A4,A5,A6
+set A2=$S(0<0:0,0'=0:0,0>0:0,0[0:0),A3=$select(0=0:0)
+w A,A1,A2,A3,A4,A5,A6
+set A=$t(^NOROU),A1=$text(NOLAB),A2=$T(NOLAB^NOROU)
+w A,A1,A2,A3,A4,A5,A6
+set A3=$T(+1),A4=$TEXT(NOLAB+3)
+w A,A1,A2,A3,A4,A5,A6
+set A=$x'>9,A1=$x'<999,A2=$X?.N,A3=$X?1P,A4=$X?2C1A
+w A,A1,A2,A3,A4,A5,A6
+set A=$X'?.10U,A1=$X'?3.L,A2=$X'?.1CLEANUP
+w A,A1,A2,A3,A4,A5,A6
+set A=$y_" ">999,A1=$y]999,A2=$y']"",A3=$y=0,A4=$Y]]"",A5=50_"*"_$Y_"*">2
+w A,A1,A2,A3,A4,A5,A6
+halt
+
+

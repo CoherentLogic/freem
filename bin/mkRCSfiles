@@ -1,0 +1,57 @@
+#/bin/sh mkRCSfiles
+: $Locker:  $
+: $Header: /cvsroot-fuse/gump/FreeM/bin/mkRCSfiles,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: -----------------------------------------------------
+
+: Crack command line arguments
+myname=`basename ${0}`
+sh=${myname}
+
+if [ $# = 0 ] ; then
+  echo "${myname} - Creating .files and .dirs with the existing files"
+fi
+
+: Build RCS directory if not present
+if [ ! -d RCS ] ; then
+  echo "a - `pwd`/RCS"
+  mkdir RCS
+fi
+
+: Build directories in this directory
+tmp=/tmp/$$mkRCSfiles
+echo "/^\\.\\//d"		>  ${tmp}
+echo "/^\\.\\.\\//d"		>> ${tmp}
+echo "/^RCS\\//d"		>> ${tmp}
+ls -Fa1 | sed -n '/\//p' | sed -f ${tmp} | sed 's/\///'		> .dirs
+rm ${tmp}
+if [ ! -s .dirs ] ; then : Kill empty .dirs file
+  rm .dirs
+fi
+
+: Build files in this directory, sans directories
+touch .files
+echo "s/\\*//"			>  ${tmp}
+ls -Fa1 | sed '/\//d' | sed -f ${tmp}				> .files
+rm ${tmp}
+
+: Get directories to search
+dirs=
+if [ -r .dirs ] ; then
+  dirs="${dirs} `cat .dirs`"
+fi
+
+for dir in ${dirs}
+do
+  (
+    cd ${dir}
+    echo "-----------------------------------------------"
+    echo -n "Directory: `pwd`"
+    if [ -r .dirs ] ; then
+      ldirs=`cat .dirs | tr -s '\012' ' '`; echo -n ": ${ldirs}"
+    fi
+    echo ""
+    ${sh} quiet
+  )
+done
+
+: End of $Source: /cvsroot-fuse/gump/FreeM/bin/mkRCSfiles,v $

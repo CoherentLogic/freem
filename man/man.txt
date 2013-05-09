@@ -1,0 +1,27 @@
+$Source: /cvsroot-fuse/gump/FreeM/man/man.txt,v $
+$Revision: 1.1 $ $Date: 2000/02/18 16:54:51 $
+
+The segregation of the manual pages based on a loose analogy of the
+UNIX "man pages".
+
+  man1 - Programmer Commands (Utilities, not M Commands)
+         Programmer editor, global lister, routine directory...
+  man2 - System Services
+         Standard M commands and intrisic functions
+         Implementation specific M Z-Commands, View arguments...
+  man3 - Standard Subroutines
+         Standard libraries and SSVNs
+         Current time, current date, routine/global selection...
+  man4 - Special Files/SSVNs
+         Implementation specific SSVNs, etc...
+         Implementation specific subscripts in standard SSVNs
+  man5 - File/SSVN Structure/Formats
+         Internal formats (disk image, etc) of various files
+  man6 - Games or other diversions
+  man7 - Miscellaneous
+	 Various implementation specific behavior
+  man8 - Administrative and Privileged Utilities
+         Implementation specific system management tools
+
+
+End of $Source: /cvsroot-fuse/gump/FreeM/man/man.txt,v $

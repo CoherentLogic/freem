@@ -1,0 +1,44 @@
+Directory Structure
+
+    --+-- FreeM       RCS Archive
+      |
+      +-- FreeM-work  Incremental version contains all files wanted
+
+1. Confirm that the current checked out version is pristine
+
+   $ cd FreeM
+   $ doRCSprocess rcsdiff
+
+2. Build version .files/.dirs files
+
+   $ cd ../FreeM-work
+   $ mkRCSfiles
+
+   Copy in changes from source directory
+
+   $ cp -r . ../FreeM
+
+3. Confirm changes being made
+
+   $ cd ../FreeM
+   $ doRCSprocess rcsdiff
+
+4. Create the checkpoint
+
+   $ yes . | doRCSprocess ci rev=x.0 msg="YYYY-MMM-DD Checkpoint"
+
+5. Checkout the version
+
+   $ doRCSprocess co
+
+6. Create a distribution version
+
+   $ mkRCSdist ../FreeM-0.x.0
+
+    --+-- FreeM       RCS Archive
+      |
+      +-- FreeM-work  Incremental version contains all files wanted
+      |
+      +-- FreeM-0.x.0 New version 
+
+End of $Source: /cvsroot-fuse/gump/FreeM/doc/FreeM-CP.txt,v $

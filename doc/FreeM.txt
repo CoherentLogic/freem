@@ -1,0 +1,527 @@
+FreeM Version 0 Revision $Revision: 1.2 $
+$Source: /cvsroot-fuse/gump/FreeM/doc/FreeM.txt,v $
+$Revision: 1.2 $ $Date: 2000/02/18 15:13:41 $
+
+February 21, 1999
+by Leane Verhulst.
+Any changes to this document should be forwarded to me for inclusion. 
+Thanks!
+
+
+Contents:
+        Acknowledgements
+        Where you can get FreeM
+        Systems that can run FreeM
+        To install FreeM in Linux (RedHat 5.0)
+        Executables created
+        Directory Structure
+        Command line options
+        Globals
+        Routines
+        Current paths for globals and routines
+        Miscellaneous files created and used
+        Z Commands
+        Z Functions
+        Special Z variables
+        Views
+        ZDate Function
+        ZTime Function
+
+Acknowledgements:
+  Thanks to Shalom ha-Ashkenaz for making FreeM available.
+  Thanks to Wilhelm Pastoors for his help.
+  Thanks to all the participants in the GUMP mailing list.
+
+
+Where you can get FreeM
+  The latest version of FreeM can be downloaded from ftp://www.rosecroft.net
+  Mirrored on: ftp://www.mercia.net
+
+
+Systems that can run FreeM:
+  So far, it has been confirmed that FreeM can compile on the following
+  systems:
+        Linux (RedHat 5.0)
+        Debian
+        SuSE
+
+The SuSE distribution is very nice and has more 'desktop' packages.
+Redhat is more widely used, and feels technically better. But this is
+somewhat a personal opinion.
+
+To install FreeM in Linux (RedHat 5.0):
+  Note: FreeM-0.x.0, <x> indicates the revision (e.g. FreeM-0.3.0 is 0.3.0)
+
+  Copy the .tgz file to the directory into which you want to install FreeM.
+  Unzip and extract the files:
+        tar zxvf FreeM-0.x.0.tgz
+    or
+        gzip -d FreeM-0.x.0.tgz
+        tar xvf FreeM-0.x.0.tar
+  Move to the top level of the FreeM directory tree:
+        cd FreeM-0.x.0
+  Run the makefile to compile and install the code:
+        make
+  Move to the bin directory:
+        cd bin
+  Run the mumps executable:
+        mumps or ./mumps
+  To save some disk space you may delete the object files (all of them
+  end with ".o") within the /src subdirectory by "rm *.o"
+
+
+Executables created:
+  These executables reside in the bin subdirectory of the FreeM tree.
+        gcompact          global utility
+        gfix              global utility
+        gl                global utility
+        glocks            global utility
+        grestore          global utility
+        gverify           global utility
+        mumps             executable to run mumps
+        xdump
+
+Directory Structure:
+        ---FreeM
+           |
+           +---bin              mumps executables
+           |
+           +---doc              mumps documentation
+           |
+           +---mlib             mumps system library
+           |
+           +---namespace        namespace directory (if used)
+           |   |
+           |   +---<name>       name of the namespace (can have more than 1)
+           |       |
+           |       +---routine  namespace routines
+           |       |
+           |       +---global   namespace globals
+           |
+           +---qa               quality assurance
+           |   |
+           |   +---testxxx.qa   quality assurance tests (where xxx is a number)
+           |
+           +---src              mumps source
+
+Command line options:
+  -a  usermode is set to 0 (zero)
+
+  -d    demomode on
+
+  -f    filter
+          Include this switch to turn filter on.
+          Usage unclear
+          (One aspect of the filter is that $X and $Y do not get updated in
+	  the same way.)
+
+  -h    hardcopy enable
+          Include this switch to turn hardcopy on.
+          Enables CONTROL-B
+
+  -i    import environment variables
+          This option reads the environment variables into the local symbol
+          table. Environment variables with a string length longer than 255
+          characters are not read in.
+
+  -s    standard MUMPS commands only
+          This option prevents the usage of Z commands and Z functions.
+ 
+ -C    noclear on
+ 
+Globals:   (this is taken from global.c)
+  The data is organized in a B* tree structure on external storage.
+  For a description of the principles of the algorithms see
+  =>   Donald E. Knuth "The Art of Computer Programming" vol.3 p.478
+  This tree structure guarantees fast disc access and is the
+  'canonical way' to implement mumps globals.
+
+
+  Each mumps global occupies a separate unix file in the 'current'
+  directory. %_globals are unix files in the directory '../mlib'.
+  The unix file names are the same as the corresponding mumps global
+  names; i.e. beginning with an '^'.  However it is possible to access
+  globals in other directories if the path name is specified.
+  E.g. "S ^/usr/mumps/test=1" does "S ^test=1 ; in directory /usr/mumps"
+  If mumps is started with the -s 'standard' switch, it is not possible
+  to specify a directory. There is a syntacitc ambiguity: the '/' character
+  in the directory name is in conflict with the '/' divide operator. Use
+  parentheses to make things clear.
+
+    ^/usr/mumps/test/2              ; '/2' is part of the name
+    (^/usr/mumps/test)/2            ; ambiguity resolved
+    ^test/2                         ; '/2' is a divide operation
+    ^/usr/mumps/test("ok")/2        ; '/2' is a divide
+ 
+  To prevent jobs from messing the globals up, access is regulated
+  with the 'locking' mechanism. (This is different from mumps LOCKs)
+
+
+Routines:
+  Each routine occupies a separate unix file in the 'current' directory.
+  %_routines are unix files in the directory '../mlib'. The unix file names
+  are almost the same as the corresponding mumps routine names.  The
+  differences are that the unix file name does not start with an '^', and
+  that the unix file name ends with a '.m'.
+  E.g. "D ^bench" is a unix file named bench.m in the current directory.
+       "D ^%RD" is a unix file named %RD.m in the directory '../mlib'.
+
+
+Current paths:
+	../mlib			path to access %globals
+	../mlib			path to access %routines with DO, etc..
+	../mlib			path to access %routines with ZL, etc..
+   When not using a namespace:
+        .                       path to access globals
+        .                       path to access routines with DO, etc..
+        .                       path to access routines with ZL, etc..
+   When using a namespace:  where <name> is namespace
+        ../namespace/<name>/global   path to access globals
+        ../namespace/<name>/routine  path to access routines with DO, etc..
+        ../namespace/<name>/routine  path to access routines with ZL, etc..
+
+
+
+Files used:
+	/usr/tmp/locktab		file with LOCKs
+	/usr/tmp/locktab		file with ZALLOCATE
+	/usr/tmp/hardcopy		hardcopy file
+	/usr/tmp/ioprotocol		journal file
+        /usr/tmp/mout.1                 file for device 1
+        /usr/tmp/mout.2                 file for device 2
+        /usr/tmp/mout.3                 file for device 3
+        /usr/tmp/mout.4                 file for device 4
+
+
+Z Commands: (not sure this is accurate)
+	Abbreviation		Full Name
+	za			zallocate
+	zb			zbreak
+	zd			zdeallocate
+	zg			zgo
+	zh			zhalt
+	zi			zinsert
+	zj			zjob
+	zl			zload
+	zn			znew
+	zp			zprint
+	zq			zquit
+	zr			zremove
+	zs			zsave
+	zt			ztrap
+	zw			zwrite
+
+
+Z Functions: (not sure this is accurate)
+	Abbreviation		Full Name
+	zb			zboolean
+	zc			zcall
+				zcr
+				zcrc
+				zdata
+	zd			zdate
+	ze			zedit
+	zh			zhorolog
+				zht
+	zk			zkey
+	zl			zlength
+				zlsd
+	zm
+				zname
+	zn			znext
+	zo			zorder
+	zp			zpiece
+				zprevious
+	zr			zreplace
+	zs			zsyntax
+				zsort
+	zt			ztime
+				zzip
+
+
+Special Z variables: (not sure this is accurate)
+	Abbreviation		Full Name
+	za
+	zb
+	zc			zcontrolc
+	zd			zdate
+	ze			zerror
+	zf
+	zh			zhorolog
+	zi			zinrpt
+	zj			zjob
+	zl			zlocal
+	zmc			zmatchcontrol
+	zmn			zmatchnumeric
+	zmp			zmatchpunctuation
+	zma			zmatchalphabetic
+	zml			zmatchlowercase
+	zmu			zmatchuppercase
+	zme			zmatcheverything
+	zn			zname
+	zo			zorder
+	zp			zprecision
+	zr			zreference
+	zs			zsystem
+	zt			ztime
+	ztr			ztrap
+	zv			zversion
+
+
+Views:
+VIEW 1: set Device Status word of terminal
+	Example: 
+	   to display the current device status word of the terminal:
+		W $V(1)
+VIEW 2: set current directory
+        Set the current directory path using VIEW 2:<path>
+        Examples:
+           to display current directory
+                W $V(2)
+           to get the current directory path
+                S CDPATH=$V(2)
+           to change the current directory path
+                V 2:"/dir/path"
+VIEW 3: set/show global access path
+        Set the global access path using VIEW 3:<path>
+        Examples:
+           to display the current global access path
+                W $V(3)
+           to get the current global access path
+                S CGPATH=$V(3)
+           to change the current global access path
+                V 3:"/dir/path"
+VIEW 4: set/show DO-GOTO-JOB routine access path
+        Set the DO-GOTO-JOB routine access path using VIEW 4:<path>
+        Examples:
+           to display the current routine access path
+                W $V(4)
+           to get the current routine access path
+                S CRPATH=$V(4)
+           to change the current routine access path
+                V 4:"/dir/path"
+VIEW 5: set/show ZL-ZS routine access path
+        Set the ZL-ZS routine access path using VIEW 5:<path>
+        Examples:
+           to display the current routine access path
+                W $V(5)
+           to get the current routine access path
+                S CRPATHZ=$V(5)
+           to change the current routine access path
+                V 5:"/dir/path"
+VIEW 6: set/show %global access path
+        Set the %global access path using VIEW 6:<path>
+        Examples:
+           to display the system % globals access path
+                W $V(6)
+           to get the system % globals access path
+                S SGPATH=$V(6)
+           to change the system % globals access path
+                V 6:"/dir/path"
+VIEW 7: set/show %_routine DO-GOTO-JOB access path
+        Set the %_routine DO-GOTO-JOB access path using VIEW 7:<path>
+        Examples:
+           to display the system % routines access path
+                W $V(7)
+           to get the system % routines access path
+                S SRPATH=$V(7)
+           to change the system % routines access path
+                V 7:"/dir/path"
+VIEW 8: set/show %_routine ZL-ZS access path
+        Set the %_routine ZL-ZS access path using VIEW 8:<path>
+        Examples:
+           to display the system % routines access path
+                W $V(8)
+           to get the system % routines access path
+                S SRPATHZ=$V(8)
+           to change the system % routines access path
+                V 8:"/dir/path"
+VIEW 9: set/show OPEN/USE/CLOSE path
+        Set the Open/Use/Close path using VIEW 9:<path>
+        Examples:
+           to display the OPEN/USE/CLOSE path
+                W $V(9)
+           to get the OPEN/USE/CLOSE path
+                S OUCPATH=$V(9)
+           to change the OPEN/USE/CLOSE path
+                V 9:"/dir/path"
+           to open and read the file /etc/httpd/httpd.conf do the following:
+                V 9:"/etc/httpd"
+                O 4:"httpd.conf":"R" U 4 R X C 4
+VIEW 10: set zallocktable ; ZDEALLOCATE
+VIEW 11: set locktable ; UNLOCK
+VIEW 12: set rga (routine global) protocol file
+VIEW 13: hardcopy file
+VIEW 14: set journal file
+VIEW 15: set journal flag  0=inactive 1=write -1=read
+VIEW 16: max # of error messages
+        Examples:
+           to display the number of error messages
+                W $V(16)
+           to display a single error message
+                W $V(16,x)
+                        where x is a number from 1 to the max
+VIEW 17: set intrinsic z-commands
+VIEW 18: set intrinsic z-functions
+VIEW 19: set intrinsic special variables
+	a $Z-special variable that is not in $V(19) 
+	can be SET and retrieved.
+VIEW 20: break service code
+VIEW 21: size of last global
+VIEW 22: number of v22_aliases
+VIEW 23: contents of 'input buffer'
+VIEW 24: number of screen lines
+VIEW 25:
+VIEW 26: DO-FOR-XEC stack pointer
+	Example:
+	    W $P($V(26,$V(26)),"^",2) 
+	will display the current routine name from stack
+VIEW 27: DO-FOR-XEC stack pointer (on error)
+VIEW 28: symtab change
+	 This allows the use of a duplicate symbol table
+	 (typically only used when defining user-defined M commands)
+VIEW 29: symtab copy
+VIEW 30: number of mumps arguments
+	Examples:
+	   display number of arguments on the command line:
+		W $V(30)  (I don't think this can ever be lower than 1)
+	   display command that invoked FreeM
+		W $V(30,1) 
+	   display the arguments to the command:
+		W $V(30,x) 
+			where x is a number from 2 to max ie: $V(30)
+allow you to inspect the command line that did invoke the interpreter.
+VIEW 31: environment variables from the shell that invoked FreeM
+        Examples:
+           to display the number of variables
+                W $V(31)
+           to display a single variable
+                W $V(31,x)
+                        where x is a number from 1 to the max ie: $V(31)
+VIEW 32: maximum size of a loaded routine
+        Example:
+           to display the max routine size:
+                W $V(32)
+VIEW 33: number of routine buffers
+        Example:
+           to display the number of routine buffers:
+                W $V(33)
+VIEW 34: routine buffer size auto adjust
+VIEW 35: max number of conc. open globals
+VIEW 36: max number of conc. open devices
+VIEW 37: max size of local sym table
+	Example: 
+          to display the max partition size:
+		W $V(37)
+VIEW 38: symtab size autoadjust
+VIEW 39: max size of user defined special var. table
+VIEW 40: z_svntab autoadjust
+VIEW 41: max size of DO/XEC/FOR/BREAK stack
+VIEW 42: maximum expression stack depth
+VIEW 43: maximum number of patterns
+VIEW 44: number of characters that make a name unique
+VIEW 45: name case sensitivity flag
+VIEW 46: maximum length of name plus subscripts
+VIEW 47: maximum length of a subscript
+VIEW 48: single user flag
+VIEW 49: lower case everywhere flag
+VIEW 50: direct mode prompt expression
+	Example:
+	   V 50:"!,$V(2),"">"""
+		will change the direct mode prompt to show the
+		current directory before the ">" prompt.
+	   W $V(50) 
+		will show the current direct mode prompt expression	
+VIEW 51: default direct mode prompt string
+VIEW 52: G0 input translation table
+VIEW 53: G0 output translation table
+VIEW 54: G1 input translation table
+VIEW 55: G1 output translation table
+VIEW 60: partial pattern match flag
+VIEW 61: partial pattern suppl. char
+VIEW 62: random: seed number
+VIEW 63: random: parameter a
+VIEW 64: random: parameter b
+VIEW 65: random: parameter c
+VIEW 66: SIGTERM handling flag
+VIEW 67: SIGHUP handling flag
+VIEW 70: ZSORT/ZSYNTAX flag
+VIEW 71: ZNEXT/ZNAME flag
+VIEW 72: ZPREVIOUS/ZPIECE flag
+VIEW 73: ZDATA/ZDATE flag
+VIEW 79: old ZJOB vs. new ZJOB flag
+VIEW 80: 7 vs. 8 bit flag
+VIEW 81: PF1 flag
+VIEW 82: order counter
+VIEW 83: text in $ZE flag
+VIEW 84: path of current routine
+VIEW 85: path of last global
+VIEW 86: path of current device
+VIEW 87: date type definitions
+VIEW 88: time type definitions
+VIEW 89: UNDEF lvn default expression
+VIEW 90: UNDEF gvn default expression
+VIEW 91: missing QUIT expr default expression
+VIEW 92: EUR2DEM: type mismatch error
+VIEW 93: zkey production default rule definition
+VIEW 96: global prefix
+VIEW 97: global postfix
+VIEW 98: routine extention
+	Example: to set the routine extension
+		V 98:expr
+	Example: to get the routine extension
+		S REXT=$V(98)
+	Example: to display the routine extension
+		W $V(98)
+VIEW 99: timer offset
+VIEW 100: send kill signal
+	Example: to kill a process id
+		V 100:PID
+	Example: to get the exit status of the last kill
+		W $V(100)
+VIEW 110: local $o/$q data value
+VIEW 111: global $o/$q data value
+VIEW 113: set termio infos
+VIEW 133: remember ZLOAD directory on ZSAVE
+VIEW 200: namespace index number
+        Examples:
+           to display the current namespace index number
+                W $V(200)
+           to change the namespace index number
+                V 200:num
+VIEW 201:
+
+ZDate Function:
+	Transform a $H date to a human readable date.
+	Default format: ccyy/mm/dd
+		This:		W $ZD       or    w $ZD($H)
+		Returns:	1999/02/01
+	Other formats:	$ZD($H,1) returns mm/dd/yy	(02/01/99)
+			$ZD($H,2) returns dd MON yy	(01 FEB 99)
+			$ZD($H,3) returns dd/mm/yy	(01/02/99)
+			$ZD($H,4) returns d.m.yy	(1.2.99)
+			$ZD($H,5) returns d.m.yy	(1.2.99)
+			$ZD($H,6) returns d.m.ccyy	(1.2.1999)
+			$ZD($H,7) returns dd.mm.yy	(01.02.99)
+        Note: Anybody know the difference between $ZD($H,4) and $ZD($H,5)?
+                Please let me know.
+
+
+ZTime Function:
+	Transform a $H time to a human readable time.
+	Default format: hh:mm:ss  (hh is 24 hour clock)
+		This:		W $ZT       or    W $ZT($P($H,",",2))
+		Returns:	21:36:46
+        Other formats:  $ZT(1) returns hh:mm:ss         ( 0:00:01)
+                        $ZT(77777) returns hh:mm:ss     (21:36:17)
+                        $ZT(1,1) returns hh:mm:ss AM    ( 0:00:01AM)
+                                in 12 hour clock
+                        $ZT(77777) returns hh:mm:ss AM  ( 9:36:17 PM)
+
+ZTrap Variable:
+	Set the location (routine) to go to if the program gets an error.
+	Example:	S $ZT="ERROR^ROUTINE" sets the ztrap variable.
+			Now if the program gets an error, the error trap is
+			goto'd.
+
+End of $Source: /cvsroot-fuse/gump/FreeM/doc/FreeM.txt,v $

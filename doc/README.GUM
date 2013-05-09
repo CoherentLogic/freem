@@ -1,0 +1,52 @@
+/**
+ * $Source: /cvsroot-fuse/gump/FreeM/doc/README.GUM,v $
+ * $Revision: 1.4 $ $Date: 2000/02/18 15:13:41 $
+ */
+
+
+FreeM - Free Standard M
+-----------------------
+
+  FreeM started its life as the FreeMUMPS released by MUG/Deutschland.
+  It is the variant of FreeMUMPS developed by the GUM Project.
+
+  The GUM Project intends to actively continue development of FreeM and
+  welcomes your participation.
+
+  FreeM remains subject to the licensing set forth in the README.
+
+
+Usage
+-----
+
+  To make FreeM (under UNIX):
+  - install the release:
+    $ cd <somewhere>
+    $ tar xvfz FreeM-0.x.0
+    where 'x' is the revision number
+  - build FreeM
+    $ cd FreeM-0.x.0
+    $ make install
+  - run FreeM
+    $ mkdir mydir
+    $ cd mydir
+    $ ../bin/mumps
+
+
+For all C code:
+--------------
+
+  1. indent (now 1.9.1) as the official stylizer for FreeM.
+  2. doc/indent.pro  controls the C code style.
+  3. We require NL delimited files (not textmode CRLF, if submitted as CRLF
+     files, they are converted to NL files, via "tr -d '\r'" or equivalent)
+  4. Patch files (against the 0.x.0 release) are the preferred way to
+     receive changes.
+  5. People submitting code must expect that protoize and indent are
+     run against the code to ensure conformance to the style prior to
+     release.
+  6. CFLAGS will be -Wall (for gcc) and all *warning*s are fixed (unless
+     intractible... I've had a few of these that I wasn't smart enough to
+     get around).
+
+/* End of $Source: /cvsroot-fuse/gump/FreeM/doc/README.GUM,v $ */

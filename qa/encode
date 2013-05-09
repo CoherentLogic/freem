@@ -1,0 +1,52 @@
+#!/bin/sh
+# $Source: /cvsroot-fuse/gump/FreeM/qa/encode,v $
+# $Revision: 1.3 $ $Date: 2000/02/28 18:02:23 $
+#
+# Usage: encode <dir> <file>
+#
+
+if [ $# != 2 ] ; then
+	echo "usage: $0 <dir> <file>"
+	exit 0
+fi
+
+dir=`basename $1`
+file=$2
+
+case ${file} in
+*.err)	suffix="euu"
+	encodedfile=`basename ${file} .err`.${suffix}
+	;;
+*.out)	suffix="ouu"
+	encodedfile=`basename ${file} .out`.${suffix}
+	;;
+*)	echo "don't grok how to encode ${file}"
+	exit 1
+	;;
+esac
+
+echo encoding ${dir}/${file} to ${encodedfile}
+
+cat > ${encodedfile} << EOF
+###
+# \$Source\$
+# \$Revision\$ \$Date\$
+#
+# This is a uuencoded version of the file ${dir}/${file}
+# which is anticipated to contain binary data, and must be
+# uudecoded prior to use.  This may be accomplished by:
+#
+#   \$ cd ${dir}
+#   \$ uudecode ${file}
+#
+
+EOF
+
+uuencode ${file} < ${file} >> ${encodedfile}
+
+cat >> ${encodedfile} << EOF
+
+# End of \$Source\$
+EOF
+
+# End of $Source: /cvsroot-fuse/gump/FreeM/qa/encode,v $

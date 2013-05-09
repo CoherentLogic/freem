@@ -1,0 +1,1 @@
+direct mode test QUIT command and XECUTE command interaction

@@ -1,0 +1,251 @@
+$Source: /cvsroot-fuse/gump/FreeM/doc/Changes.GUM,v $
+$Revision: 1.5 $ $Date: 2000/02/18 15:13:41 $
+
+FreeM - Free Standard M
+-----------------------
+
+ ***  *                                             ****  *   * *     *
+*   * *                                            *    * *   * **   **
+*     *                                            *      *   * * * * *
+*     * ***   ****  * ***   *** *  ****   ****     *      *   * *  *  *
+*     **   *      * **   * *   *  *    * *    *    *      *   * *     *
+*     *    *  ***** *    * *   *  ******  **       *  *** *   * *     *
+*     *    * *    * *    *  ***   *         **     *    * *   * *     *
+*   * *    * *   ** *    * *      *    * *    * ** *   ** *   * *     *
+ ***  *    *  *** * *    *  ****   ****   ****  **  *** *  ***  *     *
+                           *    *                                     
+                            ****                                      
+Changes.GUM
+-----------------------------------------------------------------------------
+Version 0.5.0   1999-Apr-15
+Changes
+From:    
+	 Stephen Maher    <stephen_maher@email.com>
+	 Winfried Gerum   <wg@winner.de>
+	 John Murray      <john@murray.tele2.co.uk>
+	 Axel Trocha      <axel@trocha.com>
+	 Lloyd Milligan   <wlloyd@ix.netcom.com>
+         David Whitten    <whitten@netcom.com>
+         LD Landis        <ldl@Rosecroft.net>
+	 Steve Lathrop    <slathrop@WinningSolutions.com>
+	 Verhulst, Leane  <lverhulst@nmff.nwu.edu>
+	 Lloyd Milligan   <wlloyd@ix.netcom.com>
+	 Wilhelm Pastoors <wjp@vetmed.uni-giessen.de>
+	 Jon Diamond      <Jdiamond@btinternet.com>
+	 Winfried Bantel  <winfried.bantel@usa.net>
+	 Chris Hale       <chale5@ford.com>
+	 Steve Morris     <smorris@nexen.com>
+	 Sam Sandqvist    <Sam_Sandqvist@candle.com>
+	 Michael Trent    <mtrent@apple.com>
+         Don Piccone      <dpiccone@mtechnology.org>
+
+Basis:	 FreeM-0.4.0
+C-Source (src/):                                JohnM/WinfriedG
+----------------
+        - Added MDC VENDOR ID#49 (reserved... pending) for ^$SYSTEM SSVN
+            Dr. Walters,
+              I have reserved Vendor ID #49 for FreeM.
+            Don Piccone
+            Secretary, MDC
+            <dpiccone@mtechnology.org>
+need	- changes needed for Cygwin compile (JohnM/SteveM)
+need	- fix to OPEN code (StephenM/Chris)
+need	- fix to $QUERY(local) 
+	- fix to LOCK code 
+	- fix SIflag default for -f 
+	- fix Makefile for version.h creation 
+	- change timezone global's name 
+	- change to allow longer option names with --name 
+	- changes to xecline.c to provide
+	 - a hook for all additional M1995 + M2001 commands
+	 - to implement MERGE, RLOAD, RSAVE as userdefined commands
+	- changes to implement !! and generalize not-processing
+	- changes to limit $V(31) to environment variables less than
+	   string length.
+	- changes to fix $QSUBSCRIPT and allow SET $QS=foo
+
+Documentation (doc/):                           JohnM/Leane
+----------------
+	-updated FreeM.txt (Leane)
+need	-add parameter passing bug to ToDo (Lloyd)
+	-add change of ftime & stime to ToDo (Michael)
+	-created LCC-steps.txt (Sam)
+	-created WhyVersNum.txt (David/SteveL)
+        -created EmacsFix.txt (Wilhelm)
+	-updated ToDo (David)
+	-created FreeMasCGI.txt (WinfriedB)
+	-created Contributers list (Larry)
+	-created HowToMakeUsers (Wilhelm)
+need	-created Zcommands (JonD/WinfriedG)
+	-created CVSnote.txt (Larry/SteveM)
+	-created C2M.txt (SteveM)
+
+Library (mlib/):                                WinfriedG/JonD
+----------------
+need	-include %zmerge.m (WinfriedG)
+need	-new utilities (JonD)
+need 	-LGR^%ZOSV return naked reference (Lloyd)
+
+Quality Assurance (qa/)
+	-changed to call ^QASTU from exec_qa on command line.
+	 (avoid normal ^%LOGIN when doing tests)
+
+========
+Version 0.4.0   1999-Feb-12
+
+Changes
+From:    Axel Trocha    <axel@trocha.com>
+	 Lloyd Milligan <wlloyd@ix.netcom.com>
+         David Whitten  <whitten@netcom.com>
+         LD Landis      <ldl@Rosecroft.net>
+
+Basis:	 FreeM-0.3.0
+
+C-Source (src/):				Axel/Lloyd/David/LD
+----------------
+  - implemented $V(200) and $V(201), both integer values
+    - $V(200) holds information about the current namespace index
+           - $V(201) holds information about the current configuration index
+  - Accomodate namespace mods in cleaning up distribution.
+  - Additional documentation, ToDo items
+  - Add qa area
+  - Fix reported $Q(var(""))
+  - Automate version string generation
+  - Rework signal/sigaction related use of OLDUNIX, now use the
+    generalized SIGNAL_ACTION() macro and define USE_SIGNAL or
+    USE_SIGACTION to indicate what SIGNAL_ACTION() generates
+  - Change 255 (and various other similar constants) to STRLEN
+    as appropriate (many changes annotated with what was there)
+  - Bug 1 - routine containing empty line causing process to hang
+  - If importing environment (-i flag), ignore any environment
+    variable containing more than STRLEN characters (semi-hack?)
+
+Library (mlib/):				Axel
+----------------
+%ED
+  - issues ZL <routine> after leaving the editor. I still do not
+    know if that fixes that "routine was changed but FreeM does
+    not realize"
+    problem - but for now it seems to be a good workaround
+  - ^%SYS("EDITOR") =3D> defines default editor program  if that
+    is not defined or empty it will use >vi<
+    (Please only use the D ^%SYSGEN Utility to change this)
+
+%RD,%GD
+  - "output screw-up fixed"
+%SYS
+  - called at Systemstartup
+  - enables namespaces, if none are defined it will ask you
+    to create a namespace
+  - may be used for configuration handling... I already implemented
+    configs, but since they are not used, I did not release those
+    routines
+  - executes ^%ED if the ^%E Global does not exist
+  - changes the commandprompt
+%SYSNSP
+  - internal Namespace stuff
+%SYSNSP0
+  - internal Namespace stuff
+%MUTIL
+  - misc M utils
+%FUTIL
+  - misc file i/o utils mostly using hostcommands
+%SYSGEN
+  - system setup utility
+    - namespaces: add, delete, repair
+    - editor: change
+    - configurations: **not enabled yet**
+%KEY    - getkey function
+ %KEYINT 
+ %KEYTEST
+%MEN
+  - menu
+%SYSDEV
+  - vt/ansi stuff
+%N
+  - chui to switch between namespaces
+
+
+^%SYS Global:
+-------------
+
+^%SYS("NSPACE")=idx     default namespace index=20
+^%SYS("NSPACE",idx)     namespace name=20
+
+^%SYS("EDITOR")		alternate editor (like joe or emacs)
+
+^%SYS("NOSYS")		if set it will disables %SYS startup
+
+                        ***configs not implemented***
+^%SYS("CONFIG")       = default conf
+^%SYS("CONFIG",conf#) = conf name
+^%SYS("CONFIG",conf#,...
+
+ToDo:
+	- oops, I realize that % routines or % globals are displayed
+	  when using
+             D ^%GD or D ^%RD
+	  no matter what namespace I am using... but since we do not
+	  have defined a Manager Namespace... That will have to be okay
+        - improve my namespace routines and add the option to change
+          the default namespace path to something else than "../namespace"
+        - somehow try to keep the first-routine line up-to-date (date-time),
+          but right now I do not see an option to do this...
+
+-----------------------------------------------------------------------------
+
+Version 0.3.0   1999-Jan-29
+
+  More clean up... made sources conform to indent.pro specifications.
+  From an functional standpoint:
+  - Changed % routine and % global directory to use "../mlib"
+    Note: may change this via VIEW 7:"%rtn/goto/do-path",8:"%zl/zs-path"
+  - Several % M utilities contributed by Axel Trocha (axel@trocha.com)
+  To Do (next):
+  - Have not gotten clean compile with -Wall
+  - Have not yet run protoize (too many diagnostics as yet)
+
+-----------------------------------------------------------------------------
+
+Version 0.2.0   1999-Jan-26
+
+  Rescinded the name of PSM due to popular request.
+  - Created a more standard Makefile
+  - Routine source code default to files ending in ".m"
+  - Routine source archive ("Routine format") to use ".rsa" file extent.
+  - Source file names fit 8.3 name format for older environments
+  - Introduce some additional documents (C-Style.txt in particular)
+
+-----------------------------------------------------------------------------
+
+Version 0.1.0   1999-Jan-21
+
+  This is the first version of PSM by the GUM Project.  Very little
+  was done beyond making some superficial tweaks, such as adding the
+  PSM name.
+  
+  For the record:
+  - The major version number will remain at 0 until PSM is considered a
+    reasonably "complete" implementation of ANSI M.
+  - Each sub-version is the RCS major revision.
+  - The sub-sub-version is reserved for incremental releases, allowing easier
+    coordination between multiple developers.
+
+-----------------------------------------------------------------------------
+
+Version 0.0.1   1999-Jan-20
+
+  This was the original version made to work on Linux by Ron Fox, which
+  was release on 1999-Jan-19.
+
+-----------------------------------------------------------------------------
+
+Version 0.0.0   1999-Jan-20
+  Initial Shalom ha-Ashkenaz, 1998/06/18 CE checkin.
+  - All files renamed as per original README
+  - Changed from [textmode] (cr/lf) to standard lf delimited
+  - Checked into RCS as Revision 0.0
+
+-----------------------------------------------------------------------------
+
+End of $Source: /cvsroot-fuse/gump/FreeM/doc/Changes.GUM,v $

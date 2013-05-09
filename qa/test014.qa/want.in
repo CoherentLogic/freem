@@ -1,0 +1,8 @@
+B:0  C:0 "device" D:0 LBL^ROU I 0
+E  G:0 LBL^ROU H:0 1 H:0  I 1
+J:0 LBL^ROU K:0 LOCAL L:0 NREF
+M:0 LOCAL=^GLOBAL N:0 LOCAL
+O:0 1_"DEVICE" Q:0 ARG
+R:0 LOCAL S:0 LOCAL="VALUE"
+U:0 5 W:0 !,# X:0 "not even code"
+halt

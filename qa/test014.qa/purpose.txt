@@ -1,0 +1,2 @@
+direct mode post conditionalized (all false) commands
+

@@ -1,0 +1,15 @@
+R X
+contents of X
+R Y
+contents of Y
+W !,$D(X),!,X
+W !,$D(Y),!,Y
+R ^X
+contents of X
+W !,"matching : ",X=^X
+R ^X,^X(1)
+contents of X
+contents of Y
+W !,"matching : ",Y=^X(1)
+W !,"matching : ",X=^X
+halt

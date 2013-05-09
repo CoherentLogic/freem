@@ -1,0 +1,14 @@
+WRIte $J("",0),$J(" ",1)=" ",$JUSTIFY(0,0)=0,$justify(2,1),$j(1,2,3)
+wriTe $L(""),$L(0),$L(1)=1,$LENGTH(1.2,0.2)=2,$l(123,2),$length(2,31)
+WriTe $n(A("8")),$next(B(-1)),$NEXT(C(1,2,3)),$N(D(2,3)),$N(@("A(2)"))
+wRiTe $o(A("")),$order(B(-1)),$O(A(""))="",$ORDER(C("1",2,"3")),$O(@("Z(9)")
+WRiTe $p("a","a"),$piece("A","a",1),$P(1,2,3,4),$PIECE(32,2,3)
+wrITe $q(A(1)),$query(A(1,2)),$Q(B(3,2)),$QUERY(C(3,2,1))
+WrITe $r(1),$R(10)<10,$random(1.5),$RANDOM(0+1)
+wRITe $s(1:1),$SELECT(1:1,0:1),$S(0<0:0,0'=0:0,0>0:0,0[0:0),$select(0=0:0)
+WRITe $t(^NOROU),$text(NOLAB),$T(NOLAB^NOROU),$T(+1),$TEXT(NOLAB+3)
+writE $x'>9,$x'<999,$X?.N,$X?1P,$X?2C1A,$X'?.10U,$X'?3.L,$X'?.1CLEANUP
+WritE $y_" ">999,$y]999,$y']"",$y=0,$Y]]"",50_"*"_$Y_"*">2
+halt
+
+

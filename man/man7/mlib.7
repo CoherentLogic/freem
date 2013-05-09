@@ -1,0 +1,9 @@
+The mlib takes advantage of the fact that FreeM will automatically run
+a program named ../mlib/%LOGIN.m on startup. 
+
+There are two globals that are used by the mlib to store information
+about the system (../mlib/^%SYS) and the editor (../mlib/^%E)
+They are KILLed before the FreeM distribution is built, and are
+recreated when the FreeM system is started from a directory that
+it had not been used in before.
+

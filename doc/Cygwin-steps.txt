@@ -1,0 +1,137 @@
+HOWTO: Build and run FreeM on a Wi***ws platform
+==========================
+=======================
+John Murray
+john@murray.tele2.co.uk
+26th February 1999
+
+With thanks to Steve Morris
+
+READ ME FIRST
+=============
+Right to the end please...
+
+Now you're ready to start.
+
+Get yourself a Unix-aware Windows Editor
+==========================
+===============
+
+If you're going to edit any FreeM components you need something that'll
+handle Unix-style line-terminators rather than DOS-style ones. 
+I recommend PFE, free from http://www.lancs.ac.uk/people/cpaap/pfe/
+
+Fetch FreeM
+===========
+
+Unpack the FreeM distribution, preserving the directory structure. I 
+placed it in c:\FreeM where it gave me a subtree c:\FreeM\FreeM-0.4.0
+
+NOTE: to make this procedure work with FreeM-0.4.0 required changes to 
+three source files. 
+These changes have been submitted for inclusion in 0.5.0
+
+Get Cygwin
+==========
+Go to http://sourceware.cygnus.com/cygwin/
+
+Fetch the Beta 20.1 version, the latest beta available at the 
+time of writing.
+
+Use suitable link from following URL to fetch full.exe
+
+Install this on your Win95/98/NT system (I used Win98)
+
+There's a bug in B20.1 that prevents access to files containing "%" 
+in their name, which cripples FreeM's ability to work with library 
+routines and globals.
+
+Solution is to update B20.1 with one of the development builds. Cygnus 
+recommends you don't use them unless you have to, which we do. 
+I chose the following:
+
+ftp://sourceware.cygnus.com/pub/cygwin/snapshot-19990115/cygwin-inst-19990115.tar.gz
+
+Install it over the following subtree of your B20.1 installation, 
+preserving the directory structure you find within the tar:
+
+	C:\cygnus\cygwin-b20\H-i586-cygwin32
+
+Using WinZip (www.winzip.com) this was easy.
+
+Build FreeM
+===========
+
+Start Cygwin B20 using Start-Menu entry (Cygnus Solutions)
+Result: the "bash" shell command-window opens
+---------------------------------------------
+bash.exe: warning: could not find /tmp, please create!
+BASH.EXE-2.02$
+--------------
+
+umount /
+
+mount c:/FreeM /
+	(this makes c:\FreeM the root of your Cygwin filesystem)
+
+mkdir -p /tmp
+	(this creates c:\FreeM\tmp)
+mkdir -p /bin
+	(this creates c:\FreeM\bin)
+
+To set bash up so that cut and paste work properly, click on the
+"Properties" button of the window, then on the "Misc" tab. Make sure
+that "Quick Edit" is checked and "Fast Pasting" isn't. These settings
+will be remembered next time you run bash from that shortcut.
+
+Exit the bash shell (type Ctrl+D)
+
+In Windows, copy the file sh.exe
+ from C:\cygnus\cygwin-b20\H-i586-cygwin32\bin
+ to c:\FreeM\bin
+This is advised by Cygnus, as some tools expect to find /bin/sh
+
+Copy the file bash.exe
+ from C:\cygnus\cygwin-b20\H-i586-cygwin32\bin
+ to c:\FreeM\bin
+This is necessary because some of the FreeM scripts (e.g. those in qa) 
+want to use /bin/bash
+Maybe they could be revised to stick to /bin/sh
+
+In C:\cygnus\cygwin-b20\H-i586-cygwin32\bin
+ create a copy of gcc.exe and give it the name cc.exe
+This allows the Makefile to find a cc (there's probably a better way,
+but I'm a newbie in the Unix field)
+
+Edit c:\cygnus\cygwin-b20\cygnus.bat
+ Append the following two characters ";." (omit the quotes) to the 
+line beginning
+ SET PATH=
+This places the current directory at the end of the search path within
+the CygWin environment, so commands don't require a "./"-prefix.
+
+Restart bash
+
+cd /FreeM-0.4.0
+make
+
+Assuming the build completes, a mv command to move the executables to 
+../bin, fails because under CygWin the files are automatically 
+given a .exe extension by gcc
+
+So do the following:
+	cd src
+	mv *.exe ../bin
+
+The failure of mv in the automatic procedure means that the QA step 
+should be set off manually:
+	cd ../qa
+	make
+I don't claim to know exactly what this does, but it seems to exercise
+FreeM a bit.
+
+Run FreeM
+=========
+
+cd /FreeM-0.4.0/bin
+mumps

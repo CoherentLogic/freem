@@ -1,0 +1,50 @@
+###
+# $Source$
+# $Revision$ $Date$
+#
+# This is a uuencoded version of the file test004.qa/want.out
+# which is anticipated to contain binary data, and must be
+# uudecoded prior to use.  This may be accomplished by:
+#
+#   $ cd test004.qa
+#   $ uudecode want.out
+#
+
+begin 664 want.out
+M;75M<',@<W1A<G0*#QM;2!M;&`\;6VT;6S,W.S0P;1M;<AM;2!M;,'4;6T@/
+M&UMM&UMM(!M;2QM;,D@/&UMM&UMM(!M;2QM;,T@/&UMM&UMM(!M;2QM;-$@/
+M&UMM&UMM(!M;2QM;-4@/&UMM&UMM(!M;2QM;-D@/&UMM&UMM(!M;2QM;-T@/
+M&UMM&UMM(!M;2QM;.$@/&UMM&UMM(!M;2QM;.4@/&UMM&UMM(!M;2QM;,3!(
+M#QM;;1M;;2`;6TL;6S$Q2`\;6VT;6VT@&UM+&ULQ,D@/&UMM&UMM(!M;2QM;
+M,3-(#QM;;1M;;2`;6TL;6S$T2`\;6VT;6VT@&UM+&ULQ-4@/&UMM&UMM(!M;
+M2QM;,39(#QM;;1M;;2`;6TL;6S$W2`\;6VT;6VT@&UM+&ULQ.$@/&UMM&UMM
+M(!M;2QM;,3E(#QM;;1M;;2`;6TL;6S(P2`\;6VT;6VT@&UM+&ULR,4@/&UMM
+M&UMM(!M;2QM;,C)(#QM;;1M;;2`;6TL;6S(S2`\;6VT;6VT@&UM+&ULR-$@/
+M&UMM&UMM(!M;2QM;,3LQ2`\;6VT;6VT/&UMM&ULS-SLT,&T;6W(;6T@;6S!U
+M&UM(#QM;;1M;;2`;6TL;6S)(#QM;;1M;;2`;6TL;6S-(#QM;;1M;;2`;6TL;
+M6S1(#QM;;1M;;2`;6TL;6S5(#QM;;1M;;2`;6TL;6S9(#QM;;1M;;2`;6TL;
+M6S=(#QM;;1M;;2`;6TL;6SA(#QM;;1M;;2`;6TL;6SE(#QM;;1M;;2`;6TL;
+M6S$P2`\;6VT;6VT@&UM+&ULQ,4@/&UMM&UMM(!M;2QM;,3)(#QM;;1M;;2`;
+M6TL;6S$S2`\;6VT;6VT@&UM+&ULQ-$@/&UMM&UMM(!M;2QM;,35(#QM;;1M;
+M;2`;6TL;6S$V2`\;6VT;6VT@&UM+&ULQ-T@/&UMM&UMM(!M;2QM;,3A(#QM;
+M;1M;;2`;6TL;6S$Y2`\;6VT;6VT@&UM+&ULR,$@/&UMM&UMM(!M;2QM;,C%(
+M#QM;;1M;;2`;6TL;6S(R2`\;6VT;6VT@&UM+&ULR,T@/&UMM&UMM(!M;2QM;
+M,C1(#QM;;1M;;2`;6TL;6S$[,4@/&UMM&UMM5V5L8V]M92!T;R!&<F5E32!6
+M97)S:6]N(#`N-2XP#1M;,D@-"G%A/AM;/S(U:%<@(FAE;&QO(E\B('=O<FQD
+M(BPB:&5L;&\B*R(@=V]R;&0B+"(Q87!P;&4B*R(R;W)A;F=E<R(-"FAE;&QO
+M('=O<FQD,#,-"G%A/AM;/S(U:'<@,2LR+#$J,BPQ+C`J-"XP+#(J-2XP+#$M
+M,BPS+S0L-39<-RPX(SD-"C,R-#$P+3$N-S4X.`T*<6$^&UL_,C5H=W)I=&4@
+M)$$H.2DL)$$H.3DL,2DL)&$H.3DL,2D-"C4W-3<U-PT*<6$^&UL_,C5H5W)I
+M=&4@)$,H-3`I+"1C*#4R+#4S*2PD8R@U7S(L,U\U*0T*,C0U-",-"G%A/AM;
+M/S(U:'=2:71E("1$*$$I+"1$051!*$$H,2DI(S(L)&0H02@Q+#(I*5LP+"1D
+M871A*$`B02(I/CD-"C`P,3`-"G%A/AM;/S(U:%=2:71E("1%*#`N,2DL)$58
+M5%)!0U0H,BPQ*2PD12@S,BPQ*2PD12@S+#(L,2DL)$4H,3(L,RPT*2PD12@Q
+M,BPP*2PD92@Q+#(S*0T*+C(S#0IQ83X;6S\R-6AW<DET92`D1B@Q+#`I+"1&
+M24Y$*#`L,2DL)&8H,3`P+#`L,2DL)&9I;F0H,3`P+#$L,"D-"C`P,S(-"G%A
+M/AM;/S(U:%=R271E("1'*$(I+"1'150H0B@Q+#(L,RDI+"1G*$(H,2PR+#,L
+M-"DI+"1G970H0B@Q+#(L,RPT+#4I+#8I#0HV#0IQ83X;6S\R-6AW4DET92`D
+F2#TB(BPD2"TD2"PG+21(#0HP,#`-"G%A/AM;/S(U:&AA;'0-"@H`
+`
+end
+
+# End of $Source$

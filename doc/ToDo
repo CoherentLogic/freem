@@ -1,0 +1,418 @@
+$Source: /cvsroot-fuse/gump/FreeM/doc/ToDo,v $
+$Revision: 1.2 $ $Date: 2000/02/18 15:13:41 $
+
+
+*****          *****                  *                      *     
+  *             *   *                 *        *             *     
+  *             *   *                 *                      *     
+  *     ****    *   *   ****          *       **     ****   ****   
+  *    *    *   *   *  *    *         *        *    *    *   *     
+  *    *    *   *   *  *    *  *****  *        *     **      *     
+  *    *    *   *   *  *    *         *        *       **    *     
+  *    *    *   *   *  *    *         *        *    *    *   *  *  
+  *     ****   *****    ****          *****  *****   ****     **   
+                                                                   
+Important Issues for the ToDo List:
+
+1) Functionality requirements. This should reference a base standards
+level along with anything we might exclude from the standard. Each
+exclusion should have a justification. Justification might be high
+cost to implement vs. infrequent use of a feature.
+
+2) Test requirements. How will we know when we meet the
+functionality. Define the test suites. Are there public domain
+packages that must be supported before we will consider releasing.
+
+3) Bug criteria. We should probably establish a bug severity measurement. 
+Proposal: 
+	1 means that the bug results in a crash. 
+	2 means a missing feature, incomplete feature 
+	  or improperly implemented feature. 
+	3 means minor, infrequently seen feature error or cosmetic
+	  problem. 
+The criteria might say no severity 1 bugs and only justified severity 
+2 bugs will be in each release. Justification might be high cost 
+to fix compared to infrequent use of feature.
+
+                                                                   
+Note:
+	sha = Shalom ha-Ashkenaz
+	ldl = Larry Landis
+	djw = David Whitten
+	sjm = Steve Morris
+	mt  = Michael Trent 
+	ch  = Chris Hale
+
+Idea# Author/Description
+----- ----------------------------------------------------------------------
+  .01 No manual exists. (should be in English, in TeX, LaTeX or HTML)
+      [1999-Jan-20 sha]
+
+  .02 should handle all of standard MUMPS
+      [1999-Jan-20 sha]
+
+  .03 should have more than 255 char max string length
+      [1999-Jan-20 sha]
+
+  .04 accuracy of power operator (**) with non-integer exponents needs
+      careful evaluation.
+      [1999-Jan-20 sha]
+
+  .05 accuracy of division may be controlled with $ZPRECISION, but
+     is not clean.
+      [1999-Jan-20 sha]
+
+  .06 local variable module handles arrays inefficiently.
+      [1999-Jan-20 sha]
+
+  .07 call by reference has a problem: if the formal name and the
+      actual name differ, all action should be visible under both
+      names, with the exception of the NEW command. FreeMUMPS does
+      not honor this exception.
+      [1999-Jan-20 sha]
+
+  .08 $QUERY with negative second argument returns wrong results.
+      [1999-Jan-20 sha]
+
+  .09 standard error handling not implemented. So far only traditional
+      non-standard error handling with SET $ZTRAP="entryref"
+      [1999-Jan-20 sha]
+
+  .10 transaction processing not implemented.
+      [1999-Jan-20 sha]
+
+  .11 MERGE not implemented
+      [1999-Jan-20 sha]
+
+  .12 KVALUE not implemented
+      [1999-Jan-20 sha]
+
+  .13 KDATA not implemented
+      [1999-Jan-20 sha]
+
+  .14 ssvn not implemented
+      [1999-Jan-20 sha]
+
+  .15 &sql() binding not implemented.
+      [1999-Jan-20 sha]
+
+  .16 OMI not implemented.
+      [1999-Jan-20 sha]
+
+  .17 MWAPI not implemented.
+      [1999-Jan-20 sha]
+
+  .18 GKS binding not implemented.
+      [1999-Jan-20 sha]
+
+  .19 there are restrictions in the use of characters. Printable ASCII
+      are OK. ASCII-Controls cannot be used in global subscripts.
+      a better implentasion uses a counter plus a number of 
+      arbitrary (UNICODE?) chars.
+      UNICODE should be adopted as the internal character set.
+      [1999-Jan-20 sha]
+
+  .20 VIEW/$VIEW should be retired completely. All functionality currently
+      using VIEW should be changed to ssvn.
+      [1999-Jan-20 sha]
+
+  .21 if COLOR is made undefined /* commented in mpsdef0 */ FreeMUMPS
+      works under SCO-UNIX, but it crashes immediately under LINUX.
+      [1999-Jan-20 sha]
+
+  .22 extensions for values (i.e. number+unit) so far only implemented
+      for CURRENCY with the official conversion rates for the currencies of
+      the euro club. (?allow based on a command line argument ?)
+      [1999-Jan-20 sha]
+
+  .23  A Windows-98 or Windows-NT Version is desirable.
+      [1999-Jan-20 sha]
+
+  .24  make it compile & run under other Unixes
+      [1999-Jan-20 sha]
+
+  .25 Provide G0, G1 translation using SSVN ^$C rather than VIEW and $VIEW
+      this is VIEW 52,53,54,55
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .26 Provide ability to set priority of current process (was VIEW 0:<prio>)
+      Should this be SET ^$JOB("ZPRIORITY")=<prio>  or something else?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .27 Set device status word.  was VIEW 1:<new device status num>
+      Should this be SET ^$DEVICE($D,"??")=<new value> ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .28 Set current process' current working directory: was VIEW 2:"newpath"
+      SET ^$JOB("ZCWD")="path" ?
+      This also empties all the routine buffers and closes all the globals.
+      should these two functionalities be tied together?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .29 Set current process' global access path: was VIEW 3:"newpath"
+      This closes all non-% globals. Should functionalities be tied ?
+      SET ^$GLOBAL( ??
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .30 Set current process' DO-GOTO-JOB routine access path:was VIEW 4:"path"
+      This empties the routine buffers of all non-% routines, but 
+      the current routine. If we make exception for current routine, 
+      why not for all on the stack?  Should this functionality be tied ?
+      SET ^$ROUTINE( ???
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .31 Set current process' ZLOAD-ZSAVE routine access path.was VIEW 5:"path"
+      SET ^$ROUTINE( ??  see .32 below
+      This empties the routine buffers of all non-% routines, but 
+      the current routine. If we make exception for current routine, 
+      why not for all on the stack?  Should this functionality be tied ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .32 Implement RSAVE, RLOAD as well as ZSAVE, ZLOAD
+      note: this is a more specific case of .02 above
+     [1999-Jan-20 sha]
+
+  .33 Set current process' global access path: was VIEW 6:"newpath"
+      This closes all % globals. Should functionalities be tied ?
+      SET ^$GLOBAL( ??
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .34 Set current process' DO-GOTO-JOB routine access path:was VIEW 7:"path"
+      This empties the routine buffers of all % routines, but 
+      the current routine. If we make exception for current routine, 
+      why not for all on the stack?  Should this functionality be tied ?
+      SET ^$ROUTINE( ???
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .35 Set current process' ZLOAD-ZSAVE routine access path.was VIEW 8:"path"
+      SET ^$ROUTINE( ??  see .32 above
+      This empties the routine buffers of all % routines, but 
+      the current routine. If we make exception for current routine, 
+      why not for all on the stack?  Should this functionality be tied ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .36 Set current process' OPEN-USE-CLOSE path was VIEW 9:"path"
+      S ^$DEVICE( ?? or ^$JOB( ??
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .37 Set current process' ZALLOC table : was VIEW 10:"data"
+      S ^$LOCK( or ^$SYSTEM ??
+      side effect is to ZDEALLOC all current locks that are ZALLOCATED 
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .38 Set current process' LOCK  : was VIEW 11:"data"
+      S ^$LOCK( or ^$SYSTEM ??
+      side effect is to UNLOCK all current locks that are LOCKED 
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .39 Set current process' RGA protocol file : was VIEW 12:"data"
+      This is the Routine/Global Access protocol file.  This seems
+      to be part of the Least Recently Used caching mechanism.
+      What SSVN covers this issue?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .40 Set hard copy file : was VIEW 13:"data"
+      What SSVN covers this issue?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .40 Set journal file : was VIEW 14:"data"
+      Does the ^$GLOBAL ssvn cover this?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .41 Set journalling flag : was VIEW 15:"data" 0=none 1=write -1=read
+      Does the ^$GLOBAL ssvn cover this?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha][A
+
+  .42 Define Error messages : was VIEW 16:errnum:"Error String"
+      What SSVN covers this?
+      note: this is a more specific case of .20 above
+      it also interacts with .02 since Standard errors include a 
+      letter prefix ("M") and a number.
+     [1999-Jan-20 sha]
+
+  .43 Define intrinsic Z-commands
+      was VIEW 17:"space delimited list Z-Commands"
+      use a vendor specific Z SSVN ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .44 Define intrinsic Z-functions: 
+      was VIEW 18:"space delimited list Z-Functions"
+      use a vendor specific Z SSVN ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .45 Define intrinsic Z-system variables: 
+      was VIEW 19:"space delimited list Z-system variables"
+      use a vendor specific Z SSVN ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .46 Define Break service action: 
+      was VIEW 20:"MUMPS code"
+      use a vendor specific Z SSVN ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .47 Define an alternate name for a global was VIEW 22:^global:^newglobal
+      use ^$GLOBAL ssvn ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .48 Force string into current process' input buffer : was VIEW 23:"String"
+      use ^$DEVICE ssvn ?  This is part of the 'dejournalling process'.
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .49 Force string onto current process' screen  : was VIEW 24:"String"
+      perhaps ^$DISPLAY ? or ^$DEVICE ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .50 Force clear screen  : was VIEW 25
+      perhaps ^$DISPLAY ? or ^$DEVICE ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .51 QUIT multiple levels of the stack. : was VIEW 26:<integer>
+      ZCommand ? Is this in the scope of SSVNs ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .52 set Routine Buffer size of a routine buffer : was VIEW 32:<num>
+      ^$SYSTEM or ^$ROUTINE ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .53 set Routine Buffer count of routine buffers: was VIEW 33:<num>
+      ^$SYSTEM or ^$ROUTINE ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .54 set Routine Buffer Auto Adjust flag was VIEW 34:<truthvalue>
+      ^$SYSTEM or ^$ROUTINE ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .55 set size of partition (local vars + intermediate results)
+      was VIEW 37:<num>
+      ^$SYSTEM ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .56 Set Partition Auto Adjust flag was VIEW 38:<truthvalue>
+      ^$SYSTEM ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .57 Set size of User Defined special variable table
+      was VIEW 39:<num>
+      ^$SYSTEM ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .58 Set User Defined special variable table Auto Adjust flag
+      was VIEW 40:<truthvalue>
+      ^$SYSTEM ?
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .59 Set number of characters that make a name unique.
+      this must be a number less than 255. was VIEW 44:<num>
+      ^$GLOBAL or ^$SYSTEM ? See .60 below
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .60 Change code to use record to store number of unique letters
+      in a global variable name.  Current uses glvnflag.one[0] 
+      which is a number forced to be a character.
+
+  .61 Change code to use record to store case sensitivity flag
+      for global variable names. Currently uses glvnflag.one[1] 
+      which is boolean forced to be a character
+
+  .62 Set case sensitivity flag for Global variable names 
+      ^$GLOBAL or ^$SYSTEM ? See .61 above.  was VIEW 45:<truthvalue>
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+  .63 Set maximum record length for Global variable names 
+      ^$GLOBAL or ^$SYSTEM ?  was VIEW 46:<num>
+      note: this is a more specific case of .20 above
+     [1999-Jan-20 sha]
+
+
+
+    1 Completion and implementation of the c2m API to global managers to
+      allow more flexibility in defining where global data is stored.
+      [1999-Jan-29 sjm]
+
+    2 Change FreeM to automatically call ^%HELP when a single question
+      mark is input at the programmer's prompt.  This will allow
+      access to docs and manual pages from inside FreeM
+      [1999-Feb-08 djw]
+
+    3 Modify FreeM to use the gnu readline facility to interface
+      with Open Source initiatives that support internationalisation
+      [1999-Feb-08 djw]
+
+    4 Modify mlib utilities to use a common subroutine for selection
+      of routines (^%RSEL) and globals (^%GSEL)
+
+    5 Modify defaults for pattern match characters on lowercase and
+      uppercase to pay attention to -s (standard only) command line
+      option
+      [1999-Feb-08 djw]
+
+    6 Modify so that any command line options may be controlled by
+      environment variables if not specified.
+      [1999-Feb-08 ldl]
+
+    7 I personally think that we should have a command line option like
+      -e or --extensions=(NEXT,DEFINEVARS) or something like that to
+      allow particular extensions to the code.
+      Possibly we can say
+        --compatible=(DTM4.3,DSM,Cache)
+      or maybe we can extend the existing -s to
+        --standard=M1984
+      or
+        --standard=1995.
+      or even
+	--standard=MIIS
+      Whoever takes on the to do item of integrating the GNU getopts
+      package into the code should coordinate this, but I think it
+      would be useful to have some discussion on the list of what
+      command line options would be useful to have.
+      [1999-Feb-10 djw]
+
+    8   FreeM uses the deprecated ftime() and stime(). It should 
+	use "gettimeofday" and "settimeofday" instead.  "gettimeofday", 
+	is pretty much the standard time function in Linux land 
+	The ftime() and stime() functions are only used in getting and
+	setting $HOROLOG, so that's easy enough to address.
+	[1999-Feb-12 mt]	
+
+    9   FreeM source refers to sgetty.h which doesn't appear to
+	be stored in a consistent place on Unix environments.
+	The GNU readline package does a good job of hiding
+	these details. We should deal with these when doing that
+	conversion. [1999-Mar-11 ch]
+      
+End of $Source: /cvsroot-fuse/gump/FreeM/doc/ToDo,v $

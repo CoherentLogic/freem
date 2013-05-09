@@ -1,0 +1,33 @@
+#!/usr/bin/perl
+
+# Usage: xdump [file]
+
+# Use the file they specified, if specified
+
+open(STDIN,$ARGV[0]) || die "Can't open $ARGV[0]: $!\n"
+    if $ARGV[0];
+
+# Do it optimally as long as we can read 16 bytes at a time.
+
+while (($len = read(STDIN,$data,16)) == 16) {
+    @array = unpack('N4', $data);
+    $data =~ tr/\0-\37\177-\377/./;
+    printf "%8.8lx    %8.8lx %8.8lx %8.8lx %8.8lx    %s\n",
+        $offset, @array, $data;
+    $offset += 16;
+}
+
+# Now finish up the end a byte at a time.
+
+if ($len) {
+    @array = unpack('C*', $data);
+    $data =~ y/\0-\37\177-\377/./;
+    for (@array) {
+        $_ = sprintf('%2.2x',$_);
+    }
+    push(@array, '  ') while $len++ < 16;
+    $data =~ s/[^ -~]/./g;
+    printf "%8.8lx    ", $offset;
+    printf "%s%s%s%s %s%s%s%s %s%s%s%s %s%s%s%s    %s\n",
+        @array, $data;
+}

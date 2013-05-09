@@ -1,0 +1,4 @@
+direct mode
+write expressions using constants
+using many functions,operators, and kinds of constants
+halt

@@ -1,0 +1,95 @@
+  Although I am very pleased to see the increased coverage of UNIX and
+  Linux in particular, I am very concerned when I see "newbies" running
+  their systems and using "root".
+
+  I will not launch into a diatribe here, but will simply state that unless
+  you need to be root (for specific system adminitration purposes, etc),
+  you should NEVER use root as a working account... This is stated for more
+  reasons than: "It is bad form", "It is culturally wrong", etc, etc...
+  (Nor, would I suspect that a Windows NT user would insist on always doing
+  everyting as "Administrator"...  basically a similar concept...  you *do*
+  know better don't you, right?).
+
+  Realize that many of the "old tapes" about "how vulnerable UNIX is" that
+  you may hear are, quite frankly out of date... Things have been done to
+  help the "superuser" (still an idea held in 'disrepute') be less tempting
+  to use... To learn more, get the O'Reilly and Associates "Essential UNIX
+  System Administration" 2E, or some other book to describe how to run your
+  system...
+  For yourself, and your system's sake, create a user and use that for your
+  work.  Just be cause the hardware can be a PC (Play Computer), doesn't
+  mean that it is limited to that role when running a real operating
+  system.
+
+Outline of setup process:
+
+with modest knowledge of directory and file rights I tried to address
+one aspect of the "multi-user" thing within my GNU Linux environment.
+
+First: creating a new group and new user to run FreeM.
+
+as root:
+
+groupadd -g 1998 -o freeM 
+useradd -u 1806 -g freeM -d /opt/mumps/ mgr 
+mkdir /opt/mumps
+chown -R mgr.freeM /opt/mumps
+passwd mgr
+
+Now I login as mgr and install FreeM-0.4.0
+(/opt/mumps/FreeM-0.4.0)
+
+Afterwards I go to FreeM-0.4.0/bin, start mumps and define a
+namespace("space1")
+
+Now I start playing "multi user".
+
+I have a user "tester" who wants to work with the FreeM database.
+
+++ First possibility:
+
+adding tester to the freeM group in /etc/group ; looks like this
+freeM:x:1806:tester
+
+When tester gets a login shell next time and I type in the command
+"id" I find tester also in group "1806(freeM)"
+
+**** ****** *****
+But I couldn't start up mumps from the tester account until I logged
+in as mgr, went to /opt and changed
+
+chmod -R 1770 /opt/mumps
+***** who knows better ? side effects ? *******
+
+
+Next: to access the namespace "space1" (defined with mgr before) from
+the tester account I have to go to the directory 
+/opt/mumps/FreeM-0.4.0/bin 
+before starting mumps so that mumps gets the correct relative path
+information. I use a 3 line script "m.login" 
+
+#!bin/sh
+cd /disk2/home/MGR/FreeM-0.4.0/bin
+mumps
+cd
+
+"chmod u+x m.login" and ". m.login" starts up mumps properly.
+
+++ Second possibility:
+
+root issues a password for the freeM group
+gpasswd freeM
+
+I login as "testerx" who is not in the freeM group.
+I get access to the FreeM database by
+newgrp freeM
+and giving the password. 
+(According to what I have read meanwhile this way is not recommended.)
+With ". m.login" (see above) I can start mumps.
+
+At last:
+when creating a global with tester the owner of that file is tester!
+Example:
+-rw-rw-rw-   1 tester    users        2048 Feb 16 10:43 ^cctest
+
+But this is another chapter to be written by someone wiser than me ...

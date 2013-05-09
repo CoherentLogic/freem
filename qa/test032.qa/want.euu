@@ -1,0 +1,17 @@
+###
+# $Source$
+# $Revision$ $Date$
+#
+# This is a uuencoded version of the file test032.qa/want.err
+# which is anticipated to contain binary data, and must be
+# uudecoded prior to use.  This may be accomplished by:
+#
+#   $ cd test032.qa
+#   $ uudecode want.err
+#
+
+begin 664 want.err
+`
+end
+
+# End of $Source$

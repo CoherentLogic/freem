@@ -1,0 +1,15 @@
+
+  Diamond, Jon        Library, Utilities, Conformance
+  Dorman, Rod         MDC, Advice
+  Gerum, Winfried     Code, Advice, MTA(?)
+  Kreis, Greg         Hardhats coordination, Dependencies
+  Landis, LD          Coordination, Code, Documentation
+  Milligan, Lloyd     Code, Test, Documentation
+  Morris, Steve       Code, Microsoft
+  Murray, John        Code, Conformance
+  Pastoors, Wilhelm   Test, Documentation
+  Schell, Kate        Coordination, Conformance, MTA, MDC, Advice
+  Schofield, Lyle     Advise, Prioritize, Track, Project Mgmt
+  Trocha, Axel        Code, Utilities
+  Walters, Dick       Project lead, Chief Coordination, MTA
+  Whitten, David      QA Test Suite, MDC, Advice

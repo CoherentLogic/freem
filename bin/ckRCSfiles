@@ -1,0 +1,76 @@
+: /bin/sh ckRCSfiles
+: $Locker:  $ $Source: /cvsroot-fuse/gump/FreeM/bin/ckRCSfiles,v $
+: $Id: ckRCSfiles,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: $Header: /cvsroot-fuse/gump/FreeM/bin/ckRCSfiles,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: -----------------------------------------------------
+
+: Crack command line arguments
+myname=`basename ${0}`
+sh=${myname}
+
+dodot=
+if [ $# = 0 ] ; then
+  echo "${myname} - Comparing .files and .dirs with the existing files"
+  dodot=y
+fi
+
+for i
+do
+  case ${i} in
+    quiet) ;;
+    filterdirs)
+      tmp=/tmp/$$ckRCSfiles
+      echo "/^\\.\\//d"			>  ${tmp}
+      echo "/^\\.\\.\\//d"		>> ${tmp}
+      echo "/^RCS\\//d"			>> ${tmp}
+      if [ -r .dirs ] ; then
+        for d in `cat .dirs`
+        do
+	  echo "/^${d}\\//d"		>> ${tmp}
+        done
+      fi
+      sed -f ${tmp}
+      rm ${tmp}
+      exit 0
+      ;;
+    filteroutput)
+      sed '/^[0-9]/d' |
+      sed '/^---/d' |
+      sed '/^</s/</missing from .files\/.dirs: /' |
+      sed '/^>/s/>/missing from directory:    /'
+      exit 0
+  esac
+done
+
+
+: Get directories to search
+dirs=
+if [ "${dodot}" = "y" ] ; then
+  dirs=.
+fi
+
+if [ -r .dirs ] ; then
+  dirs="${dirs} `cat .dirs`"
+fi
+
+for dir in ${dirs}
+do
+  (
+    cd ${dir}
+    echo "-----------------------------------------------"
+    echo -n "Directory: `pwd`"
+    if [ -r .dirs ] ; then
+      ldirs=`cat .dirs | tr -s '\012' ' '`; echo -n ": ${ldirs}"
+    fi
+    tmp=/tmp/$$ckRCSfilesdir
+    echo " "
+    ls -aF1 | sed 's/\*//' | ${sh} filterdirs > ${tmp}
+    diff ${tmp} .files | ${sh} filteroutput
+    rm ${tmp}
+    if [ ${dir} != "." -a -r .dirs ] ; then
+      ${sh} quiet
+    fi
+  )
+done
+
+: End of $Source: /cvsroot-fuse/gump/FreeM/bin/ckRCSfiles,v $

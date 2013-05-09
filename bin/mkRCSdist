@@ -1,0 +1,69 @@
+#/bin/sh mkRCSdist sources
+: $Locker:  $
+: $Header: /cvsroot-fuse/gump/FreeM/bin/mkRCSdist,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: -----------------------------------------------------
+
+: Crack command line arguments
+myname=`basename ${0}`
+sh=${myname}
+if [ $# -eq 0 ] ; then
+  echo "${sh}: no arguments"
+  ${sh} usage
+  exit 1
+fi
+
+destdir=
+for i
+do
+  case ${i} in
+    destdir=*)
+      destdir=`echo ${i} | sed 's/destdir=//'`
+      ;;
+    usage)
+      echo "usage: ${myname} <dest>"
+      echo "       where <dest> is the target directory"
+      echo "       or \"usage\"   - print this help"
+      exit 0
+      ;;
+    *)				: Default parameter
+      if [ "${destdir}" = "" ] ; then
+        destdir=${i}
+      else
+	echo "can't respecify destination with ${i}, already using ${destdir}"
+	exit 1
+      fi
+      ;;
+  esac
+done
+
+: Make the directory
+if [ ! -d ${destdir} ] ; then
+  mkdir ${destdir}
+fi
+
+: Get directories to search
+dirs=.
+if [ -r .dirs  ] ; then
+  dirs="`cat .dirs` ${dirs}"
+fi
+
+for dir in ${dirs}
+do
+  (
+    cd ${dir};
+    if [ "${dir}" != "." ] ; then
+      ${sh} "destdir=../${destdir}/${dir}"
+    else
+      echo       "================================================"
+      echo       "Processing directory `pwd`/${dir}"
+      echo       "------------------------------------------------"
+      for file in `cat .files`
+        do
+	  echo cp ${file} ${destdir}
+	  cp ${file} ${destdir}
+        done
+    fi
+  )
+done
+
+: End of $Source: /cvsroot-fuse/gump/FreeM/bin/mkRCSdist,v $

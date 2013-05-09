@@ -1,0 +1,6 @@
+S Y="N A W $D(A)" X Y
+S A="N A W $D(A)" X A S A=1
+S Y="N (A) W $D(A)" X Y
+S Y="N (A,Y) W $G(A,Y)" X Y
+S Y="W Y N Y" X Y
+halt

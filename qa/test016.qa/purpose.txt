@@ -1,0 +1,2 @@
+direct mode KILL and SET commands
+

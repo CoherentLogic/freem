@@ -1,0 +1,74 @@
+%ED	; A.Trocha; initialize Editor Global 01/29/1999 03:07/GMT+1
+	; $Source: /cvsroot-fuse/gump/FreeM/mlib/%ED.m,v $
+	; $Revision: 1.3 $ $Date: 2000/02/18 15:13:41 $
+	; after having run this proggy you can invoke the editor by
+	; entering X ^%E
+	;
+	; by default VI is used as editor. If you would like another editor
+	; please set the ^%SYS("EDITOR") Global accordingly
+	;
+	S ^%E="N a,prg,f,exec,e X ^%E(1)"
+	S ^%E(1)="W !!,""EDIT PROGRAM NAME: "" R prg Q:prg=""""  X ^%E(2)"
+	S ^%E(2)="S prg=$TR(prg,""^""),f=$V(4) X ^%E(3)"
+	S ^%E(3)="S:$A(prg)=37 f=$V(8) X ^%E(4)"
+	S ^%E(4)="S:$L(f)>0&($A(f,$L(f))'=47) f=f_$C(47) X ^%E(5)"
+	S ^%E(5)="D rexist^%ED(prg) S e=^%UTILITY($J,""%ED"") X ^%E(5.5)"
+	S ^%E(5.5)="X:e=0 ^%E(6) X:e=1 ^%E(12)"
+	S ^%E(6)="W !,""CREATE A NEW PROGRAM? <Y>: "" X ^%E(7)"
+	S ^%E(7)="R a S a=$TR(a,""y"",""Y"") S:a="""" a=""Y"" X ^%E(8)"
+	S ^%E(8)="Q:a'=""Y""  X ^%E(9)"
+	S ^%E(9)="ZR  X ^%E(10)"
+	S ^%E(10)="ZI prg_"" ; [""_$ZD_""-""_$ZT_""]"" ZS @prg X ^%E(11)"
+	S ^%E(11)="W !,prg_"" created!"",*7 H 1 X ^%E(12)"
+	S ^%E(12)="S exec=""!"_$$ed^%ED()_" ""_f_prg_$V(98) X ^%E(13)"
+	S ^%E(13)="x exec S tmp=$V(1) U 0:(0::::65) X ^%E(14)"
+	S ^%E(14)="V 23:""zl ""_prg_"" zl ""_prg_"" V 1:tmp""_$C(13)"
+	I $G(QUIET)=1 Q
+	;
+	W !,"Full Screen Editor installed."
+	W !,"To use the editor enter:  X ^%E",!!
+	Q
+	;
+	;
+rexist(rtn) ;--- check if a given routine exists
+	N exec
+	S $ZT="error^%ED"
+	S exec="ZL "_rtn_" G cont^%ED" X exec
+cont	S ^%UTILITY($J,$ZN)=1 Q
+error	S ^%UTILITY($J,$ZN)=0 Q
+	;
+	;
+ed()	;--- which editor to use  (this is used be ^%E)
+	N ed
+	S ed=$G(^%SYS("EDITOR"))
+	I $TR(ed," ")="" Q "vi"
+	Q ed
+	;
+chksum() ;--- chksum... not used yet... wanted to use it to determine if a
+	;---- routine was changed to change to date+time in the header line
+	N sum,i,line
+	S i=0:1 S line=$T(+i) Q:line=""  S sum=$G(sum)+$ZCRC(line)
+	Q sum
+	;
+	;
+other	;--- entry-point for %SYSGEN to change default editor
+	N x,erg,QUIET
+	S %ta=+$G(%ta)
+other0	W !,?%ta,"Editor: " R x
+	I x="" W !,"Not changed!",! Q
+	W !,?%ta,"Sure? <Y> "
+	S erg=$$ask^%MUTIL("Y")
+	I erg=0 G other0
+	S ^%SYS("EDITOR")=x
+	W !,?%ta,"Changed.",!
+	S QUIET=1 D ^%ED
+	Q
+	;
+	;
+current	;--- show the current editor
+	N ed
+	S %ta=+$G(%ta)
+	S ed=$G(^%SYS("EDITOR"))
+	W !!,?%ta,"Current Editor: "
+	W $S(ed'="":ed,1:"vi")
+	Q

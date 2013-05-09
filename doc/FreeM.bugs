@@ -1,0 +1,160 @@
+FreeM Version 0 Revision $Revision: 1.2 $
+
+$Source: /cvsroot-fuse/gump/FreeM/doc/FreeM.bugs,v $
+$Revision: 1.2 $ $Date: 2000/02/18 15:13:41 $
+
+
+*****                        *     *        *****                          
+*                            **   **         *   *                         
+*                            * * * *         *   *                         
+*      * **   ****    ****   *  *  *         *   *  *    *   *** *   ****  
+****    *    *    *  *    *  *     *         ****   *    *  *   *   *    * 
+*       *    ******  ******  *     *         *   *  *    *  *   *    **    
+*       *    *       *       *     *         *   *  *    *   ***       **  
+*       *    *    *  *    *  *     *         *   *  *   **  *       *    * 
+*       *     ****    ****   *     *        *****    *** *   ****    ****  
+                                                            *    *         
+                                                             ****          
+-----------------------------------------------------------------------------
+
+				S U M M A R Y
+
+ Bug#	Date/Reporter/Report					       Status
+-----	---------------------------------------------------------------------
+    1   1999-Feb-04 Missing QUIT causes process hang		CLOSED 0.4.0
+    2	1999-Feb-09 $QUERY() local quotes numeric subscripts		OPEN
+    3	1999-Feb-10 Need resolution for empty line			OPEN
+
+-----------------------------------------------------------------------------
+
+
+ Bug#	Date/Reporter/Report					       Status
+-----	---------------------------------------------------------------------
+
+    1   1999-Feb-04 Lloyd Milligan <wlloyd@ix.netcom.com>	CLOSED 0.4.0
+
+        Missing quit at routine end causes process to hang.
+        In further tests this only happened when the last routine line was
+	null.  In other words, when using the editor, entering
+	  x<tab>w "x",!<enter>
+	and then saving causes it.. I didn't notice this connection at first.
+
+-----------------------------------------------------------------------------
+
+ Bug#	Date/Reporter/Report					       Status
+-----	---------------------------------------------------------------------
+
+    2	1999-Feb-09 Lloyd Milligan <wlloyd@ix.netcom.com>		OPEN
+
+	OK on including the $Q mods.  I have not seen any new problems
+	relating to $Q on global references.  However, there is a
+	problem with $Q on local symbols.  This is totally independent
+	of the global $Q, and the problem is seen in the original
+	0.3.0 release prior to the modifications.
+
+	Once again ^%RCR revealed the problem but in a very disguised
+	way.  It took many hours of digging to uncover the culprit.
+	It is maddeningly simple to illustrate.
+
+	  s a(1)=3D"",a(1,2)=3D""
+	  w $q(a(""))
+	  a("1")     <--- FreeM
+	  w $q(a(1))
+	  a("1","2") <--- FreeM
+
+	MSM and Cache produce a(1) and a(1,2).  Analogous global $q code
+	does not quote the numeric subscripts.
+
+	1999-Feb-10 Lloyd Milligan <wlloyd@ix.netcom.com>
+
+	This problem is *not* related to FreeM revisions.  Turns out
+	that some Fileman global nodes were missing after the original
+	init, although the init appeared to complete normally.  In
+	FreeM, $query returning a *local* variable quotes numeric
+	subscripts.  To illustrate,
+	  k x s x(1)="" w $q(x(""))=$na(@$q(x("")))
+	is 0 in FreeM, because the left part in the comparison is
+	x("1").  Using a workaround for this problem the new init time
+	was 138 seconds on my Pentium 75 (linux).  This time the
+	Fileman globals looked more convincing, although one can't be
+	certain.
+
+-----------------------------------------------------------------------------
+
+
+ Bug#	Date/Reporter/Report					       Status
+-----	---------------------------------------------------------------------
+
+    3	1999-Feb-09 Lloyd Milligan <wlloyd@ix.netcom.com>		OPEN
+
+        This is related to bug report 1.  Note that the specific bug
+	was fixed, but Winfried Gerum brought up some good points that
+	should be addressed.  The fix applied to close bug 1 may not
+	be precisely the one we want in the long run.
+
+	Winfried wrote:
+
+	Hello,
+
+	The problem "FreeMUMPS hangs on end of routine without QUIT" has the
+	following background:
+
+	IMHO MUMPS still does not allow for a completely empty line.
+	$TEXT on an existing, otherwise empty line yields a SPACE
+	character. FreeMUMPS is not prepared to accept an empty
+	line. An empty line within a routine terminates this
+	routine. An empty line at the end can indeed produce weird
+	results.
+
+	As a remedy FreeMUMPS has to check for that situation and it
+	should react in a predictable way.
+
+	I propose three options for discussion:
+	- let an empty line produce an error		/* option 1 */
+	- let it produce a (legal) empty line		/* option 2 */
+	- let it ignore that line			/* option 3 */
+
+	The changes have to be made to file service.c
+
+	function void zload()
+            change the lines following label again from
+					/* old code */
+    *++rouend = ch = getc(infile);
+    if (ch==LF || ch ==EOF) {
+        *rouend ++  =  EOL;  i++;
+        *savptr=i-linelen-2; savptr=rouend;
+     /* changed to new code */
+        ch = getc(infile);
+        if (ch==LF && i-1 ==linelen) {	/* is there an empty line? */
+/* option 1: error */
+         /* goto pgmov */
+/* option 2: legal empty line */
+	    i++; *++rouend = SP;
+/* option 3: ingnore this       */
+	 /* i-- ;
+            continue; */
+	}
+	*++rouend = ch;
+	if (ch==LF || ch==EOF) {
+	    *rouend++ = EOL; i++;
+            if ((j=i-linelen-2)>255)
+	        goto pgmov;
+           *savptr=j; savptr=rouend;
+	}
+					/* end changed code */
+
+	So far zload() has ignored the line length issue. It did not
+	expect empty lines nor did it expect lines in excess of 255
+	chars. As long as these routines are produced from within
+	FreeMUMPS these types of lines just cannot occur.  If MUMPS
+	routines originating from outside we need the proposed change.
+
+	Have a nice day :-)
+
+	Winfried Gerum
+
+-----------------------------------------------------------------------------
+
+
+
+End of $Source: /cvsroot-fuse/gump/FreeM/doc/FreeM.bugs,v $

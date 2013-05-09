@@ -1,0 +1,167 @@
+: /bin/sh doRCSprocess
+: $Locker:  $ $Source: /cvsroot-fuse/gump/FreeM/bin/doRCSprocess,v $
+: $Id: doRCSprocess,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: $Header: /cvsroot-fuse/gump/FreeM/bin/doRCSprocess,v 1.2 2000/02/18 15:13:41 ldl Exp $
+: -----------------------------------------------------
+
+if [ $# -eq 0 ] ; then
+  echo "${0}: no arguments"
+  ${0} usage
+  exit 1
+fi
+
+: Crack command line arguments
+myname=`basename ${0}`
+: sh=`pwd`/${myname}		: Expect shell driver in this directory
+sh=${myname}
+cmd=				: Command: ci, co, lock, rcsdiff, unlock
+msg=
+rev=
+for i
+do
+  case ${i} in
+    ci)				: Check-in sub-command
+      cmd=ci
+      ;;
+    cmd=*)			: Passed sub-command from parent
+      cmd=`echo ${i} | sed 's/cmd=//'`
+      ;;
+    co)				: Check-out sub-command
+      cmd=co
+      ;;
+    lock)			: Lock RCS files sub-command
+      cmd=lock
+      ;;
+    msg=*)			: Revision message
+      msg=`echo ${i} | sed 's/msg=//'`
+      ;;
+    rcsdiff)			: Differences sub-command
+      cmd=rcsdiff
+      ;;
+    rev=*)			: Override revision
+      rev=`echo ${i} | sed 's/rev=//'`
+      ;;
+    sh=*)			: Override where to get command
+      sh=`echo ${i} | sed 's/sh=//'`
+      ;;
+    unlock)			: Unlock RCS files sub-command
+      cmd=unlock
+      ;;
+    usage)
+      echo "usage: ${myname} <cmd> [msg=\"msg\"] [ rev=x.y ]"
+      echo "       where <cmd>:"
+      echo "         \"ci\"      - check in sources"
+      echo "         \"co\"      - check out sources"
+      echo "         \"lock\"    - lock sources"
+      echo "         \"rcsdiff\" - show differences"
+      echo "         \"unlock\"  - unlock sources"
+      echo "      or \"usage\"   - print this help"
+      exit 0
+      ;;
+    *)				: Default parameter - oopses
+      echo "invalid argument \"${i}\""
+      ${sh} usage
+      exit 1
+      ;;
+  esac
+done
+
+if [ "$cmd" = "" ] ; then
+  echo "${myname}: no command supplied"
+  echo "usage: ${myname} <cmd> [msg=\"msg\"] [ rev=x.y ]"
+  echo "       where <cmd>: \"diffs\", \"in\" or \"out\""
+  exit 1
+fi
+
+case ${cmd} in
+  ci)
+    if [ "${rev}" = "" ] ; then
+      echo "\"${myname} ${cmd}\": revision required, \"rev=x.y\""
+      exit 1
+    fi
+    if [ "${msg}" = "" ] ; then
+      echo "\"${myname} ${cmd}\": message required, \"msg=x.y\""
+      exit 1
+    fi
+    rcscmd="ci -f${rev}" 
+    dosep=
+    ;;
+  co)
+    rcscmd="co -l${rev}"
+    dosep=
+    ;;
+  lock)
+    rcscmd="rcs -l${rev}"
+    dosep=x
+    ;;
+  rcsdiff)
+    case "${rev}" in
+      -r*) ;;
+      *) rev="-r${rev}" ;;
+    esac
+    rcscmd="rcsdiff ${rev}"
+    dosep=x
+    ;;
+  unlock)
+    rcscmd="rcs -u${rev}"
+    dosep=x
+    ;;
+esac
+
+: echo "myname is \"${myname}\""
+: echo "     cmd=\"${cmd}\""
+: echo "     msg=\"${msg}\""
+: echo "      sh=\"${sh}\""
+: echo "  rcscmd=\"${rcscmd}\""
+: echo "     rev=\"${rev}\""
+: echo "----------------------------------------------"
+
+: Get where-to-look files
+if [ \( ! -r .dirs -a -r RCS/.dirs,v \) -o ! -r .files ] ; then
+  echo "Getting control files for `pwd`"
+  if [ ! -r .dirs ] ; then
+    if [ -r RCS/.dirs,v ] ; then
+      co -r${rev} .dirs
+    fi
+  fi
+  if [ ! -r .files ] ; then
+    co -r${rev} .files
+  fi
+fi
+
+: Get directories to search
+dirs=.
+if [ -r .dirs  ] ; then
+  dirs="`cat .dirs` ${dirs}"
+fi
+
+for dir in ${dirs}
+do
+  (
+    cd ${dir};
+    if [ "${dir}" != "." ] ; then
+      ${sh} ${cmd} "cmd=${cmd}" "msg=${msg}" "rev=${rev}" "sh=${sh}"
+    else
+      echo       "================================================"
+      echo       "Processing directory `pwd`/${dir}"
+      echo       "------------------------------------------------"
+      for file in `cat .files`
+        do
+	  if [ "${cmd}" = "ci" ] ; then
+            ${rcscmd} -m"${msg}" ${file}
+          else
+	    ${rcscmd}            ${file}
+	    if [ "${cmd}" = "co" ] ; then
+	      chmod g+w ${file}
+	    fi
+	  fi
+	  if [ "${dosep}" != "" ] ; then
+            echo "------------------------------------------------"
+	  fi
+        done
+      echo       "================================================"
+    fi
+  )
+done
+
+: End of $Source: /cvsroot-fuse/gump/FreeM/bin/doRCSprocess,v $

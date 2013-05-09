@@ -1,0 +1,174 @@
+.\" To display this man page, either:
+.\"   1) Install this file along with the other subject.1 files in your
+.\"      system's man1 directory (usually this is /usr/man/man1) and
+.\"      enter the command:
+.\"        man mumps
+.\"   or
+.\"   2) Specify the input (this file) and the output (your favorite pager)
+.\"      explicitly.  For example, if this file is in your current working
+.\"      directory, you can use the following to view the formatted man page
+.\"      using the "less" pager:
+.\"        man ./mumps.1 | less
+.\"
+.\" To print this man page to a PostScript printer:
+.\"   man -t ./mumps.1 | lpr
+.\" ------------------------------------------------------------------------
+.\" FreeM Copyright based on FreeMUMPS Copyright
+.\"
+.\" Copyright (C) 1998 MUG Deutschland
+.\"
+.\" Permission is hereby granted, free of charge, to any person obtaining a
+.\" copy of this software and associated documentation files (the  "Software"),
+.\" to deal in the Software without restriction, including without limitation
+.\" the rights to use, copy, modify, merge, publish, distribute, sublicense,
+.\" and/or sell copies of the Software, and to permit persons to whom the
+.\" Software is furnished to do so, subject to the following conditions:
+.\"
+.\" The above copyright notice and this permission notice shall be included in
+.\" all copies or substantial portions of the Software.
+.\"
+.\" THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+.\" IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+.\" FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL
+.\" THE MUG DEUTSCHLAND BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+.\" WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF
+.\" OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+.\" SOFTWARE.
+.\"
+.\" Except as contained in this notice, the name of the FreeMUMPS shall not
+.\" be used in advertising or otherwise to promote the sale, use or other
+.\" dealings in this Software without prior written authorization from MUG
+.\" Deutschland.
+.\"
+.TH FreeM 1 "19 January 1999" Linux "User Manuals"
+.SH NAME
+mumps, gl, locks, gcompact, gverify, fix, grestore \- a Free M system
+.SH SYNOPSIS
+.B mumps
+.sp
+.B gl [-k] [-d] [-n] [^]
+.I global
+.br
+.B glocks [
+.I -pid
+.B ] [
+.I lockfile
+.B ]
+.br
+.B gcompact [^]
+.I global
+.br
+.B gverify [^]
+.I global
+.br
+.B gfix [^]
+.I global
+.br
+.B grestore [^]
+.I global
+.SH DESCRIPTION of mumps
+The
+.B mumps ,
+program runs an instance of
+.IR "FreeM.  "
+This program is full of pleasant surprises.  The source code is well
+commented and currently serves as the primary documentation, along with
+the README file supplied with this distribution.  Much needs to be said
+here about features, limitations, etc.  Whoever designed and wrote this
+system deserves a standing ovation from M-sters worldwide.  
+.SH OPTIONS
+.IP "none at present"
+.SH DESCRIPTION of gl
+.PP
+The
+.B gl
+utility program lists the specified global to standard output.
+.SH OPTIONS
+.IP -k
+Show global keys alone on a separate line.
+.IP -d
+Show global data alone on a separate line
+.IP -n
+Show global keys and data, each on a separate line, with the keys in naked
+naked indicator form relative to the previous key.
+.IP
+If none of these switches is supplied, the output has each node's key and
+data on the same line separated by an "=".  The -k and -d switches may be
+combined as -kd to output keys and data on alternating lines.
+.SH DESCRIPTION of locks
+The
+.B locks
+utility program lists the contents of the locktable to standard output.
+.SH OPTIONS
+.IP -pid
+If the proccess id of a running mumps process is supplied, all lock
+entries created by that process will be cleared from the locktable.
+.IP lockfile
+If an alternate lockfile is specifed on the command line, it will be
+referenced by
+.B locks
+rather than the normal default lockfile ( /var/tmp/locktab ).
+.SH DESCRIPTION of gcompact
+The
+.B gcompact
+utility program compacts the specifed global in place.
+.SH DESCRIPTION of gverify
+The
+.B gverify
+utility program verifies and validates the specifed global, checking for
+database anomalies.
+.SH DESCRIPTION of gfix
+The
+.B gfix
+interactive utility program permits navigation of the B\-tree structure
+of the specifed global a block at a time.
+.SH DESCRIPTION grestore
+The
+.B grestore
+utility program will fix problems with the specified global.
+.SH "RETURN VALUES"
+I'm not sure what the return values of any of these programs is.  Something to add here.
+.SH FILES
+.I /usr/bin/mumps
+.RS
+The executable program that provides MUMPS interpreter, global and other services.
+.RE
+.I ./login.m
+.RS
+The first routine executed when
+.B mumps
+is run.  If login.mps exits with a
+.I Halt
+command, the
+.B mumps
+program stops (so we have a user mode), otherwise,
+.B mumps
+enters programmer mode.
+.RE
+.I ./bench.m
+.RS
+A benchmark routine which times multiple execution of various core operations.
+.RE
+.SH ENVIRONMENT
+There may be some environment variables that affect the operation of these programs.
+.SH BUGS
+There are a few.
+.SH AUTHOR
+Provided by Shalom ha-Ashkenaz, 1998/06/18 CE, to the stewardship of the
+MUMPS Users Group - Deutschland.
+.br
+The author's identity is a mystery.  Can anyone shed light on this?
+.br
+Man page written by Ron Fox (rfox@dls.queens.org)
+.SH COPYRIGHT
+See COPYRIGHT document included with the distribution (and embedded in the
+.I troff
+source of this man page.
+.SH "SEE ALSO"
+.BR gcompact (1),
+.BR gfix (1),
+.BR gl (1),
+.BR glocks (1),
+.BR grestore (1),
+.BR gverify (1),
+.BR mumps (1)

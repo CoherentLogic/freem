@@ -1,0 +1,10 @@
+W "hello"_" world","hello"+" world","1apple"+"2oranges"
+w 1+2,1*2,1.0*4.0,2*5.0,1-2,3/4,56\7,8#9
+write $A(9),$A(99,1),$a(99,1)
+Write $C(50),$c(52,53),$c(5_2,3_5)
+wRite $D(A),$DATA(A(1))#2,$d(A(1,2))[0,$data(@"A")>9
+WRite $E(0.1),$EXTRACT(2,1),$E(32,1),$E(3,2,1),$E(12,3,4),$E(12,0),$e(1,23)
+wrIte $F(1,0),$FIND(0,1),$f(100,0,1),$find(100,1,0)
+WrIte $G(B),$GET(B(1,2,3)),$g(B(1,2,3,4)),$get(B(1,2,3,4,5),6)
+wRIte $H="",$H-$H,'-$H
+halt
