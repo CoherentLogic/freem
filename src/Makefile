@@ -65,19 +65,19 @@ install:	${EXERTNS}
 	mv ${EXERTNS} ${INSTALL_DIR}
 
 gcompact:	compact.o ${LIB}
-	cc -i ${CFLAGS} compact.o ${LIB}	-o gcompact
+	cc ${CFLAGS} compact.o ${LIB}	-o gcompact
 gfix:		fix.o ${LIB}
-	cc -i ${CFLAGS} fix.o ${LIB}		-o gfix
+	cc ${CFLAGS} fix.o ${LIB}		-o gfix
 gl:		gl.o ${LIB}
-	cc -i ${CFLAGS} gl.o ${LIB}		-o gl
+	cc ${CFLAGS} gl.o ${LIB}		-o gl
 glocks:		locks.o ${LIB}
-	cc -i ${CFLAGS} locks.o ${LIB}		-o glocks
+	cc ${CFLAGS} locks.o ${LIB}		-o glocks
 grestore:	restore.o ${LIB}
-	cc -i ${CFLAGS} restore.o ${LIB}	-o grestore
+	cc ${CFLAGS} restore.o ${LIB}	-o grestore
 gverify:	verify.o ${LIB}
-	cc -i ${CFLAGS} verify.o ${LIB}		-o gverify
+	cc ${CFLAGS} verify.o ${LIB}		-o gverify
 mumps:		mumps.o ${LIB}
-	cc -i ${CFLAGS} mumps.o ${LIB}		-o mumps
+	cc ${CFLAGS} mumps.o ${LIB}		-o mumps
 
 ${LIB}:	${LIBRTNS}
 	ar rv  ${LIB} ${LIBRTNS}
