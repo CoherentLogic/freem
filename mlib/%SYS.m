@@ -32,6 +32,9 @@
 	I '$D(^%E)&($T(^%ED)'="") D
 	. D ^%ED
 	. W !,"For more setup options please use the ^%SYSGEN Utility",!
+	W " CURRENT NAMESPACE:  ",$$CURNS(),!,!
 	Q
 	;
-prompt	V 50:"!,$G(^%SYS(""NSPACE"",$V(200))),"">"",$C(27,91,63,50,53,104)" Q
+prompt	V 50:"!,$G(^%SYS(""NSPACE"",$V(200))),""> "",$C(27,91,63,50,53,104)" Q
+	;
+CURNS   Q $G(^%SYS("NSPACE",$V(200)))
