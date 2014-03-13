@@ -477,16 +477,16 @@ short int stcmp ();
 
 /* CRT screen */
 struct vtstyp {
-    unsigned char screenx[N_LINES + 1][N_COLUMNS];	/* characters */
-    unsigned char screena[N_LINES + 1][N_COLUMNS];	/* attributes */
+    unsigned char **screenx;	/* characters */
+    unsigned char **screena;	/* attributes */
 #ifdef COLOR
-    unsigned char screenc[N_LINES + 1][N_COLUMNS];	/* colors     */
+    unsigned char **screenc;	/* colors     */
 #endif					/* COLOR */
-    char    sclines[N_LINES + 1];	/* lines translation table   */
+  char    *sclines;	/* lines translation table   */
     char    rollflag;			/* Roll or Page mode */
     char    lin24;			/* 24 lines or 25 lines mode */
     char    savarg;
-    char    tabs[N_COLUMNS];
+    char    *tabs;
     unsigned char Xpos;
     unsigned char Ypos;
     unsigned char sc_up;

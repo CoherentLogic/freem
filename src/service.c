@@ -31,11 +31,18 @@
 #include <sys/time.h>
 #endif
 
+#include <sys/ioctl.h>
+#include <unistd.h>
+
 long int tell ();
 unsigned alarm ();
 unsigned int sleep ();
 char   *calloc ();
 void    ris ();
+
+int n_lines;
+int n_columns;
+
 
 #ifndef FREEBSD
 long int lseek ();
@@ -757,6 +764,8 @@ writeHOME (text)			/* Output on HOME device */
 	char   *text;			/* write this string */
 
 {
+  struct winsize terminal_window;
+
     static char initflag = TRUE;	/* initialisation flag */
     static char esc = 0;		/* esc processing flag */
     static char dcs = 0;		/* device control processing flag */
@@ -817,11 +826,53 @@ writeHOME (text)			/* Output on HOME device */
  * and the 'hardcopy function'
  */
     if (initflag) {
+      ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal_window);
+      n_lines = terminal_window.ws_row;
+      n_columns = terminal_window.ws_col;
+
+      printf("Lines: %d\tColumns: %d\tMemory: %d\n", n_lines, n_columns, (n_lines + 1) * n_columns);
+
 	screen = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
+	screen->screenx = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  screen->screenx[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+	screen->screena = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  screen->screena[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+
+#ifdef COLOR
+	screen->screenc = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  screen->screenc[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+#endif	
+	screen->sclines = (char *) calloc(n_lines + 1, sizeof(char));
+	screen->tabs = (char *) calloc(n_lines + 1, sizeof(char));
+	
 
 	ris (screen);
-	altscr = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
 
+	altscr = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
+	altscr->screenx = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  altscr->screenx[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+	altscr->screena = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  altscr->screena[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+
+#ifdef COLOR
+	altscr->screenc = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
+	for(i = 0; i < n_columns; i++) {
+	  altscr->screenc[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	}
+#endif	
+	altscr->sclines = (char *) calloc(n_lines + 1, sizeof(char));
+	altscr->tabs = (char *) calloc(n_lines + 1, sizeof(char));
+	
 	ris (altscr);
 	initflag = FALSE;
     }
@@ -856,7 +907,7 @@ writeHOME (text)			/* Output on HOME device */
 #endif /* COLOR */
 		    (*screen).screena[(unsigned int) (*screen).sclines[ypos[HOME]]][xpos[HOME]] = (*screen).att;
 		}
-		if (dcs == 0 && ++xpos[HOME] >= N_COLUMNS) {
+		if (dcs == 0 && ++xpos[HOME] >= n_columns) {
 		    xpos[HOME] = 0;
 		    if ((*screen).rollflag)
 			goto pLF;
@@ -876,7 +927,7 @@ writeHOME (text)			/* Output on HOME device */
 			for (i = (*screen).sc_lo; i > (*screen).sc_up; i--)
 			    (*screen).sclines[i] = (*screen).sclines[i - 1];
 			(*screen).sclines[(*screen).sc_up] = k;
-			for (i = 0; i < N_COLUMNS; i++) {
+			for (i = 0; i < n_columns; i++) {
 			    (*screen).screenx[k][i] = SP;
 			    (*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1002,13 +1053,13 @@ writeHOME (text)			/* Output on HOME device */
 		while (--args[0] > 0) ;
 	    } else if (ch == 'B') {	/* CUD cursor down */
 		do
-		    if (++ypos[HOME] >= (N_LINES - 1))
-			ypos[HOME] = (N_LINES - 1);
+		    if (++ypos[HOME] >= (n_lines - 1))
+			ypos[HOME] = (n_lines - 1);
 		while (--args[0] > 0) ;
 	    } else if (ch == 'C') {	/* CUF cursor right */
 		do
-		    if (++xpos[HOME] >= N_COLUMNS)
-			xpos[HOME] = (N_COLUMNS - 1);
+		    if (++xpos[HOME] >= n_columns)
+			xpos[HOME] = (n_columns - 1);
 		while (--args[0] > 0) ;
 	    } else if (ch == 'D') {	/* CUB cursor left */
 		do
@@ -1019,19 +1070,19 @@ writeHOME (text)			/* Output on HOME device */
 		i = --args[0];
 		if (i < 0)
 		    i = 0;
-		if (i <= N_LINES)
+		if (i <= n_lines)
 		    ypos[HOME] = i;
 		i = --args[1];
 		if (i < 0)
 		    i = 0;
-		if (i < N_COLUMNS)
+		if (i < n_columns)
 		    xpos[HOME] = i;
 	    } else if (ch == 'K') {	/* EL erase line */
 		int     k;
 		short   xatt;
 
 		i = 0;
-		k = N_COLUMNS;
+		k = n_columns;
 		if (args[0] == 0)
 		    i = xpos[HOME];
 		if (args[0] == 1)
@@ -1056,7 +1107,7 @@ writeHOME (text)			/* Output on HOME device */
 
 #endif /* COLOR */
 		i = 0;
-		k = N_COLUMNS;
+		k = n_columns;
 		if (args[0] == 0)
 		    i = xpos[HOME];
 		if (args[0] == 1)
@@ -1073,8 +1124,8 @@ writeHOME (text)			/* Output on HOME device */
 		    i++;
 		}
 		if (args[0] != 1)	/* clear rest of screen */
-		    for (k = ypos[HOME] + 1; k < N_LINES; k++)
-			for (i = 0; i < N_COLUMNS; i++) {
+		    for (k = ypos[HOME] + 1; k < n_lines; k++)
+			for (i = 0; i < n_columns; i++) {
 			    (*screen).screenx[(unsigned int) (*screen).sclines[k]][i] = SP;
 			    (*screen).screena[(unsigned int) (*screen).sclines[k]][i] = 0;
 #ifdef COLOR
@@ -1083,7 +1134,7 @@ writeHOME (text)			/* Output on HOME device */
 			}
 		if (args[0] != 0)	/* clear begin of screen */
 		    for (k = 0; k < ypos[HOME]; k++)
-			for (i = 0; i < N_COLUMNS; i++) {
+			for (i = 0; i < n_columns; i++) {
 			    (*screen).screenx[(unsigned int) (*screen).sclines[k]][i] = SP;
 			    (*screen).screena[(unsigned int) (*screen).sclines[k]][i] = 0;
 #ifdef COLOR
@@ -1097,7 +1148,7 @@ writeHOME (text)			/* Output on HOME device */
 		    tmp[tmpx] = EOL;
 		    m_output (tmp);
 		    tmpx = 0;
-		    part_ref (screen, 0, N_LINES - 1);
+		    part_ref (screen, 0, n_lines - 1);
 		}
 #endif /* SCO */
 	    }
@@ -1318,7 +1369,7 @@ writeHOME (text)			/* Output on HOME device */
 			tmp[tmpx] = EOL;
 			m_output (tmp);
 			tmpx = 0;
-			part_ref (screen, 0, N_LINES - 1);
+			part_ref (screen, 0, n_lines - 1);
 		    }
 		} else if (args[0] == 21) {
 		    (*screen).bw = TRUE;
@@ -1326,15 +1377,15 @@ writeHOME (text)			/* Output on HOME device */
 			tmp[tmpx] = EOL;
 			m_output (tmp);
 			tmpx = 0;
-			part_ref (screen, 0, N_LINES - 1);
+			part_ref (screen, 0, n_lines - 1);
 		    }
 		}
 #endif /* SCO */
 	    } else if (ch == 'X') {	/* ECH Erase Character */
 		if ((k = args[0]) < 1)
 		    k = 1;
-		if ((k + xpos[HOME]) > N_COLUMNS)
-		    k = N_COLUMNS - xpos[HOME];
+		if ((k + xpos[HOME]) > n_columns)
+		    k = n_columns - xpos[HOME];
 
 		i = xpos[HOME];
 		k = i + k;
@@ -1348,7 +1399,7 @@ writeHOME (text)			/* Output on HOME device */
 		}
 	    } else if (ch == 'g') {	/* TBC Tabulation clear */
 		if (args[0] == 3) {	/* clear all */
-		    for (i = 0; i < N_COLUMNS; (*screen).tabs[i++] = 0) ;
+		    for (i = 0; i < n_columns; (*screen).tabs[i++] = 0) ;
 		} else if (args[0] == 0)	/* clear one */
 		    (*screen).tabs[xpos[HOME]] = 0;
 #ifdef SCO
@@ -1472,14 +1523,14 @@ writeHOME (text)			/* Output on HOME device */
 		if ((j = args[0]) == 0)
 		    j = 1;
 		k = (*screen).sclines[ypos[HOME]];
-		for (i = xpos[HOME]; i < (N_COLUMNS - j); i++) {
+		for (i = xpos[HOME]; i < (n_columns - j); i++) {
 		    (*screen).screenx[k][i] = (*screen).screenx[k][i + j];
 		    (*screen).screena[k][i] = (*screen).screena[k][i + j];
 #ifdef COLOR
 		    (*screen).screenc[k][i] = (*screen).screenc[k][i + j];
 #endif /* COLOR */
 		}
-		for (; i < N_COLUMNS; i++) {
+		for (; i < n_columns; i++) {
 		    (*screen).screenx[k][i] = SP;
 		    (*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1492,7 +1543,7 @@ writeHOME (text)			/* Output on HOME device */
 		if ((j = args[0]) == 0)
 		    j = 1;
 		k = (*screen).sclines[ypos[HOME]];
-		for (i = (N_COLUMNS - 1); i >= (xpos[HOME] + j); i--) {
+		for (i = (n_columns - 1); i >= (xpos[HOME] + j); i--) {
 		    (*screen).screenx[k][i] = (*screen).screenx[k][i - j];
 		    (*screen).screena[k][i] = (*screen).screena[k][i - j];
 #ifdef COLOR
@@ -1514,7 +1565,7 @@ writeHOME (text)			/* Output on HOME device */
 		    for (i = ypos[HOME]; i < (*screen).sc_lo; i++)
 			(*screen).sclines[i] = (*screen).sclines[i + 1];
 		    (*screen).sclines[i] = k;
-		    for (i = 0; i < N_COLUMNS; i++) {
+		    for (i = 0; i < n_columns; i++) {
 			(*screen).screenx[k][i] = SP;
 			(*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1529,7 +1580,7 @@ writeHOME (text)			/* Output on HOME device */
 		    tmp[tmpx] = EOL;
 		    m_output (tmp);
 		    tmpx = 0;
-		    part_ref (screen, (*screen).sc_up, N_LINES - 1);
+		    part_ref (screen, (*screen).sc_up, n_lines - 1);
 		}
 #endif /* SCO */
 	    } else if (ch == 'L') {	/* IL Insert Line */
@@ -1540,7 +1591,7 @@ writeHOME (text)			/* Output on HOME device */
 		    for (i = (*screen).sc_lo; i > ypos[HOME]; i--)
 			(*screen).sclines[i] = (*screen).sclines[i - 1];
 		    (*screen).sclines[ypos[HOME]] = k;
-		    for (i = 0; i < N_COLUMNS; i++) {
+		    for (i = 0; i < n_columns; i++) {
 			(*screen).screenx[k][i] = SP;
 			(*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1555,7 +1606,7 @@ writeHOME (text)			/* Output on HOME device */
 		    tmp[tmpx] = EOL;
 		    m_output (tmp);
 		    tmpx = 0;
-		    part_ref (screen, (*screen).sc_up, N_LINES - 1);
+		    part_ref (screen, (*screen).sc_up, n_lines - 1);
 		}
 #endif /* SCO */
 	    } else if (ch == 'S') {	/* SU Scroll up   */
@@ -1566,7 +1617,7 @@ writeHOME (text)			/* Output on HOME device */
 		    for (i = (*screen).sc_up; i < (*screen).sc_lo; i++)
 			(*screen).sclines[i] = (*screen).sclines[i + 1];
 		    (*screen).sclines[i] = k;
-		    for (i = 0; i < N_COLUMNS; i++) {
+		    for (i = 0; i < n_columns; i++) {
 			(*screen).screenx[k][i] = SP;
 			(*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1580,7 +1631,7 @@ writeHOME (text)			/* Output on HOME device */
 		    tmp[tmpx] = EOL;
 		    m_output (tmp);
 		    tmpx = 0;
-		    part_ref (screen, (*screen).sc_up, N_LINES - 1);
+		    part_ref (screen, (*screen).sc_up, n_lines - 1);
 		}
 #endif /* SCO */
 	    } else if (ch == 'T') {	/* SD Scroll down */
@@ -1591,7 +1642,7 @@ writeHOME (text)			/* Output on HOME device */
 		    for (i = (*screen).sc_lo; i > (*screen).sc_up; i--)
 			(*screen).sclines[i] = (*screen).sclines[i - 1];
 		    (*screen).sclines[i] = k;
-		    for (i = 0; i < N_COLUMNS; i++) {
+		    for (i = 0; i < n_columns; i++) {
 			(*screen).screenx[k][i] = SP;
 			(*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1605,7 +1656,7 @@ writeHOME (text)			/* Output on HOME device */
 		    tmp[tmpx] = EOL;
 		    m_output (tmp);
 		    tmpx = 0;
-		    part_ref (screen, (*screen).sc_up, N_LINES - 1);
+		    part_ref (screen, (*screen).sc_up, n_lines - 1);
 		}
 #endif /* SCO */
 	    } else if (ch == 'Z') {	/* CBT Cursor backward tab */
@@ -1672,7 +1723,7 @@ writeHOME (text)			/* Output on HOME device */
 	  zas4:;			/* refresh foreground */
 	    tmpx = 0;
 	    if (foreground)
-		part_ref (screen, 0, N_LINES - 1);
+		part_ref (screen, 0, n_lines - 1);
 	    goto zasend;
 	  zas1:;			/* foreground screen */
 	    if (foreground)
@@ -1702,6 +1753,7 @@ writeHOME (text)			/* Output on HOME device */
 	  zas5:;			/* push screen */
 	    if (zaslevel >= MAXZAS)
 		goto zasend;
+	    printf("about to push screen...\n");
 	    vts = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
 
 	    zases[zaslevel++] = vts;
@@ -1744,8 +1796,8 @@ writeHOME (text)			/* Output on HOME device */
 	if (ch == LF) {
 	  pLF:;
 	    if ((ypos[HOME] <= (*screen).sc_up) || (ypos[HOME] > (*screen).sc_lo)) {
-		if (++ypos[HOME] >= (N_LINES - 1)) {
-		    ypos[HOME] = (N_LINES - 1);
+		if (++ypos[HOME] >= (n_lines - 1)) {
+		    ypos[HOME] = (n_lines - 1);
 		}
 		if (ch == LF)
 		    tmpx--;
@@ -1764,8 +1816,8 @@ writeHOME (text)			/* Output on HOME device */
 	    }
 /* within scroll area */
 	    else if (ypos[HOME] < (*screen).sc_lo) {
-		if (++ypos[HOME] >= (N_LINES - 1)) {
-		    ypos[HOME] = (N_LINES - 1);
+		if (++ypos[HOME] >= (n_lines - 1)) {
+		    ypos[HOME] = (n_lines - 1);
 		}
 	    }
 /* lower margin of scroll area: scroll up */
@@ -1775,7 +1827,7 @@ writeHOME (text)			/* Output on HOME device */
 		if ((ch != LF)
 		    && (!(*screen).lin24)
 		    && (ypos[HOME] == (*screen).sc_lo)
-		    && (ypos[HOME] == N_LINES - 1))
+		    && (ypos[HOME] == n_lines - 1))
 		    continue;
 
 #endif /* SCO */
@@ -1784,7 +1836,7 @@ writeHOME (text)			/* Output on HOME device */
 		for (i = (*screen).sc_up; i < (*screen).sc_lo; i++)
 		    (*screen).sclines[i] = (*screen).sclines[i + 1];
 		(*screen).sclines[(*screen).sc_lo] = k;
-		for (i = 0; i < N_COLUMNS; i++) {
+		for (i = 0; i < n_columns; i++) {
 		    (*screen).screenx[k][i] = SP;
 		    (*screen).screena[k][i] = (*screen).att;
 #ifdef COLOR
@@ -1829,11 +1881,11 @@ writeHOME (text)			/* Output on HOME device */
 	}
 	if (ch == TAB) {
 	    k = xpos[HOME];
-	    if ((i = k + 1) >= N_COLUMNS)
-		i = (N_COLUMNS - 1);
+	    if ((i = k + 1) >= n_columns)
+		i = (n_columns - 1);
 	    while ((*screen).tabs[i] == 0) {
-		if (i >= N_COLUMNS) {
-		    i = (N_COLUMNS - 1);
+		if (i >= n_columns) {
+		    i = (n_columns - 1);
 		    break;
 		}
 		i++;
@@ -1907,10 +1959,10 @@ ris (scr)				/* init Screen params */
     }
     scr->cs = 0;
     scr->sc_up = 0;
-    scr->sc_lo = N_LINES - 1;
-    for (i = 0; i <= N_LINES; i++) {
+    scr->sc_lo = n_lines - 1;
+    for (i = 0; i <= n_lines; i++) {
 	scr->sclines[i] = i;
-	for (l = 0; l < N_COLUMNS; l++) {
+	for (l = 0; l < n_columns; l++) {
 	    scr->screenx[i][l] = SP;
 	    scr->screena[i][l] = 0;
 #ifdef COLOR
@@ -1919,9 +1971,9 @@ ris (scr)				/* init Screen params */
 	}
     }
 /* TABS */
-    for (i = 0; i <= N_COLUMNS; i++)
+    for (i = 0; i <= n_columns; i++)
 	scr->tabs[i] = 0;
-    for (i = 7; i <= N_COLUMNS; i += 8)
+    for (i = 7; i <= n_columns; i += 8)
 	scr->tabs[i] = 1;
     scr->rollflag = TRUE;		/* Roll or Page mode */
     scr->lin24 = TRUE;			/* 24 lines or 25 lines mode */
@@ -1962,7 +2014,7 @@ part_ref (scr, from, to)		/* refresh (foreground) screen partially */
 	tmp[k++] = '0' + (from + 1) / 10;
     tmp[k++] = '0' + (from + 1) % 10;
     tmp[k++] = 'H';
-    for (l = 0; l < N_COLUMNS; l++) {
+    for (l = 0; l < n_columns; l++) {
 	tmp[k++] = SP;
 	if ((*scr).tabs[l]) {
 	    tmp[k++] = ESC;
@@ -1988,7 +2040,7 @@ part_ref (scr, from, to)		/* refresh (foreground) screen partially */
 #ifdef COLOR
 	linec = (*scr).screenc[(unsigned int) (*scr).sclines[i]];
 #endif /* COLOR */
-	for (max = N_COLUMNS - 1; max > 0; max--) {
+	for (max = n_columns - 1; max > 0; max--) {
 	    if (linex[max] != SP)
 		break;
 	    if (linea[max] != linea[max - 1])
@@ -1999,7 +2051,7 @@ part_ref (scr, from, to)		/* refresh (foreground) screen partially */
 	exa = ~linea[0];		/* dummy value to trigger argument codes on 1st char */
 	exc = ~linec[0];		/* dummy value to trigger argument codes on 1st char */
 	for (l = 0; l <= max; l++) {
-	    if (l == (N_COLUMNS - 1) && (i == (N_LINES)))
+	    if (l == (n_columns - 1) && (i == (n_lines)))
 		continue;
 #ifndef LINUX
 #ifdef COLOR
@@ -2105,7 +2157,7 @@ part_ref (scr, from, to)		/* refresh (foreground) screen partially */
 	    }
 	    tmp[k++] = linex[l];
 	}
-	if (max + 1 < N_COLUMNS) {
+	if (max + 1 < n_columns) {
 	    tmp[k++] = ESC;
 	    tmp[k++] = '[';
 	    tmp[k++] = 'K';
@@ -2633,7 +2685,7 @@ read_m (stuff, timeout, timeoutms, length)
 			} else if (ch == ':') {		/* to end of string */
 			    while (stuff[i] != EOL && stuff[i + 1] != EOL) {
 				if (ECHOON) {
-				    if (xpos[HOME] < (N_COLUMNS - 1))
+				    if (xpos[HOME] < (n_columns - 1))
 					write_m ("\033[C\201");
 				    else
 					write_m ("\012\015\201");
@@ -2664,7 +2716,7 @@ read_m (stuff, timeout, timeoutms, length)
 			}
 			if (ch == 'C') {	/* CUF right arrow */
 			    if (ECHOON) {
-				if (xpos[HOME] < (N_COLUMNS - 1))
+				if (xpos[HOME] < (n_columns - 1))
 				    write_m (term_key);
 				else
 				    write_m ("\012\015\201");
@@ -2801,7 +2853,7 @@ read_m (stuff, timeout, timeoutms, length)
 		if (ch == NAK || ch == DC2) {	/* CTRL/U deletes all input */
 		    while (stuff[i] != EOL) {
 			if (ECHOON) {
-			    if (xpos[HOME] < (N_COLUMNS - 1))
+			    if (xpos[HOME] < (n_columns - 1))
 				write_m ("\033[C\201");
 			    else
 				write_m ("\012\015\201");
@@ -3028,8 +3080,8 @@ hardcpf ()
 	k = 0;
 	line[k++] = FF;
 	line[k++] = LF;
-	for (i = 0; i < N_LINES; i++) {
-	    for (l = 0; l < N_COLUMNS; l++) {
+	for (i = 0; i < n_lines; i++) {
+	    for (l = 0; l < n_columns; l++) {
 		if (exa != (*screen).screena[(unsigned int) (*screen).sclines[i]][l]) {		/* set attribute */
 		    short   p;
 
