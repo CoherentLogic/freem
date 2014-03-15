@@ -165,8 +165,8 @@
 #define CSLEN 1
 
 /* HOME device: number of lines and columns */
-#define N_LINES 24
-#define N_COLUMNS 80
+#define N_LINES 2000
+#define N_COLUMNS 2000
 
 #define FALSE   0
 #define TRUE    1
@@ -474,6 +474,9 @@ void    stcpy0 ();
 void    stcpy1 ();
 short int stcat ();
 short int stcmp ();
+
+int n_lines;
+int n_columns;
 
 /* CRT screen */
 struct vtstyp {

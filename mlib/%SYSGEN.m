@@ -43,11 +43,12 @@ mroot	;i;Main Menu
 	;3;Configuration Settings
 	;4;Startup Options;mstart
 	;*;
-mnamesp	;i;Namespace Settings;D show^%SYSNSP
-	;1;add Namespace;S err=$$add^%SYSNSP
-	;2;delete Namespace;D del^%SYSNSP0
-	;3;rename Namespace
-	;4;repair Namespace;D rep^%SYSNSP0 R x
+mnamesp	;i;Namespace Settings
+	;1;List Namespaces;D show^%SYSNSP
+	;2;add Namespace;S err=$$add^%SYSNSP
+	;3;delete Namespace;D del^%SYSNSP0
+	;4;rename Namespace
+	;5;repair Namespace;D rep^%SYSNSP0 R x
 	;*;
 mred	;i;Routine-Editor Settings;D current^%ED
 	;1;choose another editor;D other^%ED
