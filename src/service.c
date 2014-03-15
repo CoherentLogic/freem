@@ -1,3 +1,4 @@
+
 /***
  * $Source: /cvsroot-fuse/gump/FreeM/src/service.c,v $
  * $Revision: 1.8 $ $Date: 2000/02/28 18:02:23 $
@@ -826,26 +827,24 @@ writeHOME (text)			/* Output on HOME device */
  * and the 'hardcopy function'
  */
     if (initflag) {
-      ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal_window);
-      n_lines = terminal_window.ws_row;
-      n_columns = terminal_window.ws_col;
-
-      printf("Lines: %d\tColumns: %d\tMemory: %d\n", n_lines, n_columns, (n_lines + 1) * n_columns);
-
+	ioctl(STDOUT_FILENO, TIOCGWINSZ, &terminal_window);
+	n_lines = terminal_window.ws_row;
+	n_columns = terminal_window.ws_col;
+    
 	screen = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
 	screen->screenx = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  screen->screenx[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	    *(screen->screenx + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
 	screen->screena = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  screen->screena[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	    *(screen->screena + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
 
 #ifdef COLOR
 	screen->screenc = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  screen->screenc[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	  *(screen->screenc + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
 #endif	
 	screen->sclines = (char *) calloc(n_lines + 1, sizeof(char));
@@ -855,23 +854,23 @@ writeHOME (text)			/* Output on HOME device */
 	ris (screen);
 
 	altscr = (struct vtstyp *) calloc (1, sizeof (struct vtstyp));
-	altscr->screenx = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  altscr->screenx[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	altscr->screenx = (unsigned char **) calloc(n_lines, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	    *(altscr->screenx + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
-	altscr->screena = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  altscr->screena[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	altscr->screena = (unsigned char **) calloc(n_lines, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	    *(altscr->screena + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
 
 #ifdef COLOR
-	altscr->screenc = (unsigned char **) calloc(n_lines + 1, sizeof(unsigned char *));
-	for(i = 0; i < n_columns; i++) {
-	  altscr->screenc[i] = (unsigned char *) calloc(n_columns, sizeof(unsigned char *));
+	altscr->screenc = (unsigned char **) calloc(n_lines, sizeof(unsigned char *));
+	for(i = 0; i <= n_lines; i++) {
+	    *(altscr->screenc + i) = (unsigned char *) calloc(n_columns, sizeof(unsigned char));
 	}
 #endif	
-	altscr->sclines = (char *) calloc(n_lines + 1, sizeof(char));
-	altscr->tabs = (char *) calloc(n_lines + 1, sizeof(char));
+	altscr->sclines = (char *) calloc(n_lines, sizeof(char));
+	altscr->tabs = (char *) calloc(n_lines, sizeof(char));
 	
 	ris (altscr);
 	initflag = FALSE;
@@ -1947,6 +1946,8 @@ ris (scr)				/* init Screen params */
     short   i,
             l;
 
+    fprintf(stderr, "in ris():\n\tn_lines: %d\tn_columns: %d\n", n_lines, n_columns);
+
     scr->att = 0;
 #ifdef COLOR
     scr->col = 7;			/* default color is white on black */
@@ -1963,6 +1964,7 @@ ris (scr)				/* init Screen params */
     for (i = 0; i <= n_lines; i++) {
 	scr->sclines[i] = i;
 	for (l = 0; l < n_columns; l++) {
+	  printf("i = %d\tl = %d\n", i, l);
 	    scr->screenx[i][l] = SP;
 	    scr->screena[i][l] = 0;
 #ifdef COLOR
