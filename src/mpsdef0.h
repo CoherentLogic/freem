@@ -229,8 +229,70 @@
 #define NOVAL    46
 #define TYPEMISMATCH 47
 #define MEMOV    48	
+
+/* ANSI X11.1 errors */
+#define M1 49
+#define M2 50
+#define M3 51
+#define M4 52
+#define M5 53
+#define M6 54
+#define M7 55
+#define M8 56
+#define M9 57
+#define M10 58
+#define M11 59
+#define M12 60
+#define M13 61
+#define M14 62
+#define M15 63
+#define M16 64
+#define M17 65
+#define M18 66
+#define M19 67
+#define M20 68
+#define M21 69
+#define M22 70
+#define M23 71
+#define M24 72
+#define M25 73
+#define M26 74
+#define M27 75
+#define M28 76
+#define M29 77
+#define M30 78
+#define M31 79
+#define M32 80
+#define M33 81
+#define M34 82
+#define M35 83
+#define M36 84
+#define M37 85
+#define M38 86
+#define M39 87
+#define M40 88
+#define M41 89
+#define M42 90
+#define M43 91
+#define M44 92
+#define M45 93
+#define M46 94
+#define M47 95
+#define M48 96
+#define M49 97
+#define M50 98
+#define M51 99
+#define M52 100
+#define M53 101
+#define M54 102
+#define M55 103
+#define M56 104
+#define M57 105
+#define M58 106
 /* MAXERR = maximum error number plus one */
-#define MAXERR  49
+#define MAXERR  107
+
+
 
 /* HOME = default device */
 #define HOME 0

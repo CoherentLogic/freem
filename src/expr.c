@@ -254,8 +254,7 @@ expr (extyp)
 		symtab (get_sym, varnam, a);
 	    else if (varnam[1] != '$')
 		global  (get_sym, varnam, a);
-
-	    else
+	    else	     
 		ssvn (get_sym, varnam, a);
 	    if (ierr != OK) {
 		stcpy (varerr, varnam);
@@ -4063,6 +4062,17 @@ query qlength ql qsubscript qs random re reverse select st stack text tr transla
 		a[1] = EOL;
 		goto exec;
 
+
+	      	///* $ZX (number of columns) */
+		//case 'X':
+		//intstr (a, n_columns);
+		// goto exec;
+
+		///* $ZY (number of rows) */
+		//case 'Y':
+		//intstr (a, n_lines);
+		//goto exec;
+
 /* $ZERROR */
 	    case 'E':
 		stcpy (a, zerror);
@@ -4089,7 +4099,7 @@ query qlength ql qsubscript qs random re reverse select st stack text tr transla
 
 /* $ZVERSION */
 	    case 'V':
-		stcpy (&a[stcpy (a, "FreeM Version \201")], FREEM_VERSION_STR);
+		stcpy (&a[stcpy (a, "Coherent Logic Portable M \201")], FREEM_VERSION_STR);
 		goto exec;
 
 /* $ZNAME */
@@ -6235,11 +6245,13 @@ ssvn (action, key, data)		/* ssvn functions */
     tmp[0] = SP;
     tmp[i++] = SP;
     tmp[i] = EOL;
+
     if (tmp[1] != 'z') {
 	if (find (" c character d device g global j job l lock r routine s system ", tmp) == FALSE) {
 	    ierr = UNDEF;
 	    return;
 	}
+
 	switch (tmp[1]) {
 	case 'c':			/* ^$CHARACTER ssvn */
 	    *data = EOL;
@@ -6250,7 +6262,7 @@ ssvn (action, key, data)		/* ssvn functions */
 	case 'g':			/* ^$GLOBAL ssvn */
 	    *data = EOL;
 	    break;
-	case 'j':			/* ^$JOB ssvn */
+	case 'j':			/* ^$JOB ssvn */	  
 	    *data = EOL;
 	    break;
 	case 'l':			/* ^$LOCK ssvn */
@@ -6266,6 +6278,7 @@ ssvn (action, key, data)		/* ssvn functions */
 	    ierr = UNDEF;
 	    break;
 	}
+
 
     } else {				/* implementation specific ssvns */
 	ierr = UNDEF;

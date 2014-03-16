@@ -956,8 +956,10 @@ xecline (typ)	/* interprets and xecutes line of code at 'codptr' */
 			j = 256;
 			ierr = OK;
 		    }
-		    if (j < 0)
-			j = 0;
+		    if (j < 0) {
+		      ierr = M43;
+		      goto err;
+		    }
 		    if (io == HOME) {
 			argptr[0] = ESC;
 			argptr[1] = '[';
@@ -982,8 +984,10 @@ xecline (typ)	/* interprets and xecutes line of code at 'codptr' */
 			j = 256;
 			ierr = OK;
 		    }
-		    if (j < 0)
-			j = 0;
+		    if (j < 0) {
+		      ierr = M43;
+		      goto err;
+		    }
 		    if (io == HOME) {
 			argptr[0] = ESC;
 			argptr[1] = '[';

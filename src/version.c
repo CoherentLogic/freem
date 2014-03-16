@@ -8,7 +8,7 @@
 
 main()
 {
-    char   *rev = "$Revision: 1.4 $", *bp;
+    char   *rev = "$Revision: 1.5 $", *bp;
     int     ln;
 
     bp = strchr(rev, ' ');		/* Skip out to first space	*/
