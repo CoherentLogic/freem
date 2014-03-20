@@ -19,6 +19,8 @@
 #
 # */
 
+	    CC = gcc
+
             INSTALL_DIR = ../bin
 
                INCLUDES = \
@@ -27,7 +29,7 @@
 			  mpsdef0.h\
 			  version.h
 
-                 CFLAGS = -g -O -DHACK_NOXLATE # -Wall # too much yet
+                 CFLAGS = -g -O0 -DHACK_NOXLATE -DUSE_GETOPT -DDEBUG_GBL #-DDEBUG_SYM # -Wall # too much yet
 
                     LIB = mumps.a
 
@@ -65,19 +67,19 @@ install:	${EXERTNS}
 	mv ${EXERTNS} ${INSTALL_DIR}
 
 gcompact:	compact.o ${LIB}
-	cc ${CFLAGS} compact.o ${LIB}	-o gcompact
+	${CC} ${CFLAGS} compact.o ${LIB}	-o gcompact
 gfix:		fix.o ${LIB}
-	cc ${CFLAGS} fix.o ${LIB}		-o gfix
+	${CC} ${CFLAGS} fix.o ${LIB}		-o gfix
 gl:		gl.o ${LIB}
-	cc ${CFLAGS} gl.o ${LIB}		-o gl
+	${CC} ${CFLAGS} gl.o ${LIB}		-o gl
 glocks:		locks.o ${LIB}
-	cc ${CFLAGS} locks.o ${LIB}		-o glocks
+	${CC} ${CFLAGS} locks.o ${LIB}		-o glocks
 grestore:	restore.o ${LIB}
-	cc ${CFLAGS} restore.o ${LIB}	-o grestore
+	${CC} ${CFLAGS} restore.o ${LIB}	-o grestore
 gverify:	verify.o ${LIB}
-	cc ${CFLAGS} verify.o ${LIB}		-o gverify
+	${CC} ${CFLAGS} verify.o ${LIB}		-o gverify
 mumps:		mumps.o ${LIB}
-	cc ${CFLAGS} mumps.o ${LIB}		-o mumps
+	${CC} ${CFLAGS} mumps.o ${LIB}		-o mumps
 
 ${LIB}:	${LIBRTNS}
 	ar rv  ${LIB} ${LIBRTNS}

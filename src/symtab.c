@@ -813,7 +813,7 @@ symtab (action, key, data)		/* symbol table functions */
 #endif
 /* end of $data section */
 
-    case merge_sym:			/* increment by one and retrieve */
+    case merge_sym:			/* merge */
 #ifdef DEBUG_SYM
         printf("DEBUG MERGE: ");
         printf("[key] is [");

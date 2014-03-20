@@ -1,3 +1,0 @@
-direct mode GOTO & DO calls with various Indirection syntaxes
-Note: routine called should exist.  See test017.qa for same
-input, but routine not defined.

@@ -1,1 +1,0 @@
-Direct Mode nested FOR loops

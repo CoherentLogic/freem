@@ -151,7 +151,7 @@
 #define PATHLEN 120
 
 /* length of error message */
-#define ERRLEN 40
+#define ERRLEN 80
 
 /* number of DATE types */
 #define NO_DATETYPE 8
@@ -184,8 +184,8 @@
 #define INRPT     1
 #define BKERR     2
 #define NOSTAND   3
-#define UNDEF     4
-#define LBLUNDEF  5
+#define UNDEF     54
+#define LBLUNDEF  61
 #define MISSOPD   6
 #define MISSOP    7
 #define ILLOP     8

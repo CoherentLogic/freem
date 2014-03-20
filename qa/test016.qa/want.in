@@ -1,7 +1,0 @@
-set A=1 S:A A=2 W A
-Set B=2 S:(B=A) A=3 W B,A
-sEt A=A,B=B W B,A SEt (B,A)=5 W A,B Write:(B>A) B>A,A<B
-seT B=12,A(B)=A+10 W B,A,A(B)
-SeT A(A(B)+10)=B W $O(A("")),$O(A($O(A(""))))
-W A,B,A($O(A(""))),B($O(B("")))
-halt

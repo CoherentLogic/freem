@@ -27,14 +27,19 @@
 #include <signal.h>
 #include <time.h>
 #include <unistd.h>
+#ifdef USE_GETOPT
+#include <getopt.h>
+#endif
+
 FILE   *popen ();
 char   *strcpy ();
 char   *strchr ();
+char *strncpy ();
 unsigned int sleep ();
 void    free ();
 int     strlen ();
 int     strncmp ();
-
+extern char *strtok(char *str, const char *delim);
 #ifndef SYSFIVE
 #define FreeM_timezone -3600
 #else
@@ -567,9 +572,7 @@ main (argc, argv, envp)
     pid = getpid ();			/* get $J = process ID */
     setbuf (stdin, NULL);		/* no input buffering */
     glvnflag.all = 0L;
-
-    printf("mumps start\n");
-
+    
     {
 	struct tm lt, gt;
 	unsigned long gmt, lmt;
@@ -785,6 +788,7 @@ main (argc, argv, envp)
 	exit (2);			/* could not allocate stuff...     */
     cmdptr = cmdstack;			/* command stack */
 
+#ifndef USE_GETOPT
     j = 0;
     while (--argc > 0) {
 	j++;
@@ -848,6 +852,75 @@ main (argc, argv, envp)
     }
     if (standard)
 	cset = FALSE;			/* -s makes -c dummy */
+#else /* use getopt() */
+    int c;
+    int import_env;
+
+    struct option long_options[] = {
+      {"hardcopy", no_argument, &hardcopy, ENABLE},
+      {"filter", no_argument, &filter, TRUE},
+      {"noclear", no_argument, &noclear, TRUE},
+      {"standard", no_argument, &standard, TRUE},
+      {"import", no_argument, &import_env, TRUE},
+      {"routine", required_argument, 0, 'r'},
+      {0, 0, 0, 0}
+    };
+
+    while(1) {
+      int option_index = 0;
+      
+      c = getopt_long(argc, argv, "r:", long_options, &option_index);
+
+      if (c == -1) break;
+
+      switch(c) {
+	if (long_options[option_index].flag != 0) {
+	  /* process flag options here */
+	}
+
+      case 'r': /* startup routine */
+	strcpy(startuprou, optarg);
+	startuprou[strlen(startuprou)]='\201';
+      } 
+     
+    }
+
+    if(import_env == TRUE) {
+      char **env;      
+      char *varname = (char *) calloc(STRLEN, sizeof(char));
+      char *varval = (char *) calloc(STRLEN, sizeof(char));
+
+      char *symname = (char *) calloc(STRLEN, sizeof(char));
+      char *symval = (char *) calloc(STRLEN, sizeof(char));
+
+    
+      int namelen;
+      int vallen;
+
+
+      for(env = envp; *env != 0; env++) {
+	namelen = 0;
+	vallen = 0;
+	varname = strtok(*env, "=");
+	varval = strtok(NULL, "=");
+	if(varval != NULL) {
+	  namelen = strlen(varname);
+	  vallen = strlen(varval);
+
+	  strncpy(symname, varname, STRLEN);
+	  strncpy(symval, varval, STRLEN);
+
+	  symname[namelen] = EOL;
+	  symval[vallen] = EOL;
+	
+	  symtab(set_sym, symname, symval);
+	}
+      }
+      
+
+    }
+    
+#endif
 
 /* initialize screen */
 
@@ -1163,3 +1236,4 @@ oncld ()
 }					/* end of oncld() */
 
 /* End of $Source: /cvsroot-fuse/gump/FreeM/src/mumps.c,v $ */
+

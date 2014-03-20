@@ -3,7 +3,6 @@
  ; Copyright (C) 2014 Coherent Logic Development LLC
  ; Author: John Willis
  I $D(^%SYS("NOSYS")) Q
- K
  N DEFNS,RETVAL
  D ^%SYSDEV
  V 50:"!,$G(^%SYS(""NSPACE"",$V(200))),""> "",$C(27,91,63,50,53,104)"
@@ -13,6 +12,6 @@
  . I 'RETVAL W "Error switching to system default namespace."
  W #,$ZVERSION,!
  W " Copyright (C) 2014 Coherent Logic Development LLC",!
- W " Copyright (C) 1998 FreeM Contributors",!,!
+ W " Copyright (C) 1998 MUG Deutschland",!,!
  W " Default Namespace:  ",$G(^%SYS("NSPACE",$$dflt^%SYSNSP())),!,!
  Q

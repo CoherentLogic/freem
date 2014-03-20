@@ -1,7 +1,0 @@
-X "W 1 Q  W 2"
-X "Q  W 1 W 2"
-X "W 1 W 2 Q"
-X "W 1 W 2 Q  "
-X "W 1 Q:0  W 2  "
-X "N  W 1 Q:1  W 3"
-halt

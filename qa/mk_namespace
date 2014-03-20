@@ -1,6 +1,0 @@
-../bin/mumps << EOF
-Y
-qa
-Y
-halt
-EOF

@@ -6,12 +6,10 @@
 
 all:
 	(cd src; make install)
-	(cd qa ; make)
 
 clean:
 	(cd bin; make clean)
 	(cd src; make clean)
-	(cd qa; make clean)
 	rm -rf namespace
 	rm -f mlib/^%E mlib/^%SYS
 	rm -f mak.log

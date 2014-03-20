@@ -1,3 +1,0 @@
-direct commands
-make sure the halt command works
-and that startup works too

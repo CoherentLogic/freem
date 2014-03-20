@@ -1,1 +1,0 @@
-direct mode HANG and $H interaction

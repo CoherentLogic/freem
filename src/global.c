@@ -1696,10 +1696,23 @@ void global (action, key, data)		/* globals management */
 		goto killo;		/* entry found use normal kill routine */
 	    goto quit;
 	}
+    case merge_sym:
+      printf("MERGE NOT IMPLEMENTED FOR GLOBALS\n");
+#ifdef DEBUG_GBL     
+      int loop;
+      printf("DEBUG MERGE: ");
+      printf("[key] is [");
+      for(loop=0;key[loop]!=EOL;loop++) 
+	printf("%c",(key[loop] == DELIM) ? '!' : key[loop]);
+      printf("]\r\n");
+      printf("[data] is [");
+      for(loop=0;data[loop]!=EOL;loop++) 
+	printf("%c",(data[loop] == DELIM) ? '!' : data[loop]);
+      printf("]\r\n");    
+#endif
+      return;
     default:
 	ierr = INVREF;			/* accidental call with wrong action code (v22-stuff) */
-
-	//http://www.lawyersweekly.com/macoa/1102800.htm
     }					/* end of switch */
   quit:
 /* clean things up */

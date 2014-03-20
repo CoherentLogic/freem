@@ -1,2 +1,0 @@
-classic hello world test
-write of a constant, halt

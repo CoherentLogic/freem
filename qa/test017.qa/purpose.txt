@@ -1,3 +1,0 @@
-direct mode GOTO & DO with various Indirection syntaxes
-Routine does NOT exist.  Each syntax should complain about 
-the routine not found. (See test049.qa for same but with routine defined)

@@ -1,5 +1,0 @@
-all direct commands
-write a string literal, integer, floating point number, write empty string
-write multiples of above on same command
-write using various permutations of uppercase and lowercase
-halt
