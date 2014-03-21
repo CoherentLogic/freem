@@ -1460,12 +1460,12 @@ view_fun (f, a)				/* process VIEW function */
 	case 111:
 	    stcpy (a, g_o_val);
 	    break;
-/* $V(112): Number of rows in terminal */
-	case 112:
+/* $V(114): Number of rows in terminal */
+	case 114:
 	  intstr (a, n_lines);
 	  break;
-/* $V(113): Number of columns in terminal */
-	case 113:
+/* $V(115): Number of columns in terminal */
+	case 115:
 	  intstr (a, n_columns);
 	  break;
 /* $V(133): remember ZLOAD directory on ZSAVE */

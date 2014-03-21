@@ -962,14 +962,14 @@ main (argc, argv, envp)
     }
     if (filter) stack->ztrap[0] = EOL;
     else if (startuprou[0] == '^') stcpy (stack->ztrap, startuprou);
-    else stcpy (stack->ztrap, "^%CLPM\201");/* $ZT to be xecuted on startup */
+    else stcpy (stack->ztrap, "^%PM\201");/* $ZT to be xecuted on startup */
 #else
     if (filter) 
 	ztrap[0][0] = EOL;		/* no default ztrap for filters */
     else
 /* start-up routine */
 	if (startuprou[0] == '^') stcpy (ztrap[0], startuprou);
-	else stcpy (ztrap[0], "^%CLPM\201");/* $ZT to be xecuted on startup */
+	else stcpy (ztrap[0], "^%PM\201");/* $ZT to be xecuted on startup */
     stcpy (ztrap[NESTLEVLS + 1], ztrap[0]);	/* DSM V.2 error trapping */
 #endif
 /* init function keys */

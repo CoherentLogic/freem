@@ -1,0 +1,16 @@
+%PMTUI	; Portable MUMPS TUI Routines
+	; Copyright (C) 2014 Coherent Logic Development LLC
+	QUIT
+	;
+MASTHEAD(CAPTION)
+	;N CAPCTR
+	S CAPCTR=$L(CAPTION)/2
+	S $X=$$HCENTER^%PMTERM-CAPCTR,$Y=1
+	W CAPTION
+	D DIVIDER(2)
+	QUIT
+	;
+DIVIDER(ROW)
+	S $X=1,$Y=ROW
+	F I=1:1:$ZCOLUMNS-1 W "_"
+	QUIT
